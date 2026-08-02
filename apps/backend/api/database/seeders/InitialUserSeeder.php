@@ -18,7 +18,7 @@ class InitialUserSeeder extends Seeder
         }
 
         $estadoActivo = DB::table('estados')->where('nombre', 'Activo')->first();
-        if (!$estadoActivo) {
+        if (! $estadoActivo) {
             $estadoActivoId = DB::table('estados')->insertGetId([
                 'nombre' => 'Activo',
                 'descripcion' => 'Estado Activo',
@@ -72,17 +72,34 @@ class InitialUserSeeder extends Seeder
             ]
         );
 
-        User::updateOrCreate(
-            ['email' => 'superadmin@logistikpro.com'],
+        User::where('email', 'superadmin@logistikpro.com')->delete();
+
+        $superadministradores = [
             [
-                'empresa_id' => $empresaCentral->id,
-                'rol_id' => $rolSuperadmin->id,
+                'email' => 'alejandro.ocampo@logistikpro.com',
                 'nombre' => 'Alejandro',
                 'apellido' => 'Ocampo',
-                'telefono' => '3000000000',
-                'password' => '12345678',
-                'estado_id' => $estadoActivoId,
-            ]
-        );
+            ],
+            [
+                'email' => 'jose.vasquez@logistikpro.com',
+                'nombre' => 'Jose',
+                'apellido' => 'Vasquez',
+            ],
+        ];
+
+        foreach ($superadministradores as $superadministrador) {
+            User::firstOrCreate(
+                ['email' => $superadministrador['email']],
+                [
+                    'empresa_id' => $empresaCentral->id,
+                    'rol_id' => $rolSuperadmin->id,
+                    'nombre' => $superadministrador['nombre'],
+                    'apellido' => $superadministrador['apellido'],
+                    'telefono' => '3000000000',
+                    'password' => '12345678',
+                    'estado_id' => $estadoActivoId,
+                ]
+            );
+        }
     }
 }
