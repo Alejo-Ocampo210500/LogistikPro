@@ -3,6 +3,8 @@
 namespace App\Models\Empresas;
 
 use App\Models\Categorias\categoria;
+use App\Models\Ciudades\ciudad;
+use App\Models\Departamentos\Departamento;
 use App\Models\Impuesto\impuesto;
 use App\Models\Marcas\marca;
 use App\Models\Planes\Plan;
@@ -26,6 +28,8 @@ class Empresa extends Model
         'email',
         'telefono',
         'direccion',
+        'departamento_id',
+        'ciudad_id',
         'ciudad',
         'departamento',
         'logo',
@@ -50,6 +54,16 @@ class Empresa extends Model
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    public function departamento()
+    {
+        return $this->belongsTo(Departamento::class, 'departamento_id');
+    }
+
+    public function ciudad()
+    {
+        return $this->belongsTo(ciudad::class, 'ciudad_id');
     }
 
     public function estado()
