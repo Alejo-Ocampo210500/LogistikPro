@@ -1,15 +1,11 @@
 #!/bin/sh
 set -eu
 
-if [ ! -f .env ]; then
-    cp .env.example .env
-fi
-
-if ! grep -q '^APP_KEY=base64:' .env; then
-    php artisan key:generate --force --no-interaction
+if [ -z "${APP_KEY:-}" ]; then
+    APP_KEY="$(php -r 'echo "base64:" . base64_encode(random_bytes(32));')"
+    export APP_KEY
 fi
 
 php artisan config:clear --no-interaction
 
 exec "$@"
-
