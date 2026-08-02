@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Superadmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Superadmin\StoreEmpresaRequest;
 use App\Http\Requests\Superadmin\UpdateEmpresaRequest;
+use App\Models\Departamentos\Departamento;
 use App\Models\Empresas\Empresa;
 use App\Models\Planes\Plan;
 use App\Models\Seguridad\Rol;
@@ -24,7 +25,7 @@ class PanelSuperadminController extends Controller
         $inactivoId = $inactivo ? $inactivo->id : 2;
 
         $empresas = Empresa::query()
-            ->with(['estado'])
+            ->with(['estado', 'departamento:id,nombre', 'ciudad:id,nombre'])
             ->withCount([
                 'users',
                 'users as usuarios_activos_count' => function ($query) use ($activoId) {
@@ -104,7 +105,11 @@ class PanelSuperadminController extends Controller
         );
 
         $empresa = DB::transaction(function () use ($request, $rolAdministrador, $estadoActivoId) {
-            $plan = Plan::findOrFail($request->input('plan_id'));
+            $plan = $request->filled('plan_id')
+                ? Plan::findOrFail($request->input('plan_id'))
+                : Plan::query()->orderBy('id')->firstOrFail();
+            $departamento = Departamento::findOrFail($request->input('departamento_id'));
+            $ciudad = \App\Models\Ciudades\ciudad::findOrFail($request->input('ciudad_id'));
 
             $empresa = Empresa::create([
                 'nombre_comercial' => $request->input('nombre_comercial'),
@@ -113,8 +118,10 @@ class PanelSuperadminController extends Controller
                 'email' => $request->input('email'),
                 'telefono' => $request->input('telefono'),
                 'direccion' => $request->input('direccion'),
-                'ciudad' => $request->input('ciudad'),
-                'departamento' => $request->input('departamento'),
+                'departamento_id' => $departamento->id,
+                'ciudad_id' => $ciudad->id,
+                'departamento' => $departamento->nombre,
+                'ciudad' => $ciudad->nombre,
                 'logo' => $request->input('logo'),
                 'estado_id' => $estadoActivoId,
                 'plan' => $plan->nombre,
@@ -146,25 +153,36 @@ class PanelSuperadminController extends Controller
 
     public function update(UpdateEmpresaRequest $request, Empresa $empresa): JsonResponse
     {
-        $plan = Plan::findOrFail($request->input('plan_id'));
+        $plan = $request->filled('plan_id')
+            ? Plan::findOrFail($request->input('plan_id'))
+            : null;
+        $departamento = Departamento::findOrFail($request->input('departamento_id'));
+        $ciudad = \App\Models\Ciudades\ciudad::findOrFail($request->input('ciudad_id'));
         $activo = \App\Models\Estados\Estado::where('nombre', 'Activo')->first();
         $activoId = $activo ? $activo->id : 1;
 
-        $empresa->update([
+        $payload = [
             'nombre_comercial' => $request->input('nombre_comercial'),
             'razon_social' => $request->input('razon_social'),
             'nit' => $request->input('nit'),
             'email' => $request->input('email'),
             'telefono' => $request->input('telefono'),
             'direccion' => $request->input('direccion'),
-            'ciudad' => $request->input('ciudad'),
-            'departamento' => $request->input('departamento'),
+            'departamento_id' => $departamento->id,
+            'ciudad_id' => $ciudad->id,
+            'departamento' => $departamento->nombre,
+            'ciudad' => $ciudad->nombre,
             'logo' => $request->input('logo'),
             'estado_id' => $request->input('estado_id'),
-            'plan' => $plan->nombre,
-            'plan_id' => $plan->id,
             'fecha_vencimiento' => $request->input('fecha_vencimiento'),
-        ]);
+        ];
+
+        if ($plan) {
+            $payload['plan'] = $plan->nombre;
+            $payload['plan_id'] = $plan->id;
+        }
+
+        $empresa->update($payload);
 
         return response()->json([
             'mensaje' => 'Empresa actualizada correctamente.',
@@ -172,7 +190,7 @@ class PanelSuperadminController extends Controller
         ]);
     }
 
-    private function modulosPorPlan(string $plan): array
+    private function modulosPorPlan(?string $plan): array
     {
         $catalogo = [
             [
