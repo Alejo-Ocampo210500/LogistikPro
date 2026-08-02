@@ -1,6 +1,23 @@
 name: logistikpro
 
 services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-logistikpro}
+      POSTGRES_USER: ${DB_USERNAME:-logistikpro}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-logistikpro_test}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-logistikpro} -d ${DB_DATABASE:-logistikpro}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
   backend:
     build:
       context: ../..
@@ -14,16 +31,19 @@ services:
       APP_DEBUG: "true"
       APP_URL: http://localhost:8000
       DB_CONNECTION: ${DB_CONNECTION:-pgsql}
-      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_HOST: database
       DB_PORT: ${DB_PORT:-5432}
       DB_DATABASE: ${DB_DATABASE:-logistikpro}
       DB_USERNAME: ${DB_USERNAME:-logistikpro}
-      DB_PASSWORD: ${DB_PASSWORD:-change-me}
+      DB_PASSWORD: ${DB_PASSWORD:-logistikpro_test}
       SESSION_DRIVER: file
       CACHE_STORE: file
       QUEUE_CONNECTION: sync
     ports:
-      - "${BACKEND_PORT:-8000}:8000"
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
@@ -33,9 +53,12 @@ services:
       context: ../..
       dockerfile: apps/frontend/Dockerfile
       args:
-        VUE_APP_API_BASE_URL: ${VUE_APP_API_BASE_URL:-/api}
+        VUE_APP_API_BASE_URL: /api
     depends_on:
       - backend
     ports:
-      - "${FRONTEND_PORT:-8080}:80"
+      - "8080:80"
     restart: unless-stopped
+
+volumes:
+  postgres_data:

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Suscripcion;
 use Illuminate\Database\Seeder;
 
-class RegistroSuscripcion2Seeder extends Seeder
+class RegistroSuscripcion21Seeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -21,7 +21,7 @@ class RegistroSuscripcion2Seeder extends Seeder
             'fecha_vencimiento' => '2026-08-17',
             'usuarios_contratados' => '1/5',
             'valor_pagado' => 39000,
-            'renovacion' => 'Si'
+            'renovacion' => true
         ]);
     }
 }
