@@ -1,6 +1,6 @@
 # LogistikPro
 
-Monorepo de LogistikPro, organizado con el mismo patron de Medicina Integral:
+Monorepo de LogistikPro, organizado con el mismo patron monorepo:
 
 - `apps/backend/api`: API Laravel 12 con PHP 8.2.
 - `apps/frontend`: interfaz Vue 2 servida por Nginx.
