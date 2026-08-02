@@ -1,0 +1,19 @@
+# Historiales originales conservados al consolidar el monorepo
+**/.git.backup/
+
+# Configuraciones locales y secretos
+**/.env
+**/.env.*
+!**/.env.example
+!env/*.env.example
+
+# Dependencias y artefactos
+**/node_modules/
+**/vendor/
+**/dist/
+**/coverage/
+.DS_Store
+
+# Carpetas vacias reservadas por la arquitectura
+!docs/**/.gitkeep
+!packages/.gitkeep

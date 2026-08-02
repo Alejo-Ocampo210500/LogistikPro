@@ -1,0 +1,41 @@
+name: logistikpro
+
+services:
+  backend:
+    build:
+      context: ../..
+      dockerfile: apps/backend/api/Dockerfile
+    env_file:
+      - path: ../../env/api.env
+        required: false
+    environment:
+      APP_NAME: LogistikPro
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: ${DB_CONNECTION:-pgsql}
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE:-logistikpro}
+      DB_USERNAME: ${DB_USERNAME:-logistikpro}
+      DB_PASSWORD: ${DB_PASSWORD:-change-me}
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+      QUEUE_CONNECTION: sync
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../..
+      dockerfile: apps/frontend/Dockerfile
+      args:
+        VUE_APP_API_BASE_URL: ${VUE_APP_API_BASE_URL:-/api}
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    restart: unless-stopped

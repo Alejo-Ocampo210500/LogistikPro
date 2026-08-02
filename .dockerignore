@@ -1,0 +1,8 @@
+.git
+**/.git.backup
+**/.env
+**/node_modules
+**/vendor
+**/dist
+**/storage/logs/*.log
+env/*.env
