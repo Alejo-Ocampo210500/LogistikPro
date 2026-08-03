@@ -9,6 +9,43 @@ class PagosService
 {
     private ?bool $pagosTieneSnapshot = null;
 
+    private function obtenerEstadoActivoId(): ?int
+    {
+        return DB::table('estados')
+            ->whereIn('nombre', ['Activo', 'ACTIVO', 'activo'])
+            ->value('id');
+    }
+
+    private function obtenerPagoDetalladoPorId(int $pagoId): ?object
+    {
+        $query = DB::table('pagos')
+            ->join('suscripciones', 'pagos.suscripcion_id', '=', 'suscripciones.id')
+            ->join('empresas', 'suscripciones.empresa_id', '=', 'empresas.id')
+            ->join('planes as planes_actuales', 'suscripciones.plan_id', '=', 'planes_actuales.id')
+            ->join('metodos_pago', 'pagos.metodo_pago_id', '=', 'metodos_pago.id')
+            ->join('estados_pago', 'pagos.estado_pago_id', '=', 'estados_pago.id')
+            ->where('pagos.id', $pagoId)
+            ->select(
+                'pagos.*',
+                'suscripciones.empresa_id as empresa_id',
+                'suscripciones.plan_id as plan_id',
+                'empresas.nombre_comercial as empresa_nombre',
+                'planes_actuales.nombre as plan_nombre',
+                'suscripciones.fecha_inicio',
+                'suscripciones.fecha_vencimiento',
+                'metodos_pago.nombre as metodo_pago',
+                'estados_pago.nombre as estado_pago'
+            );
+
+        if ($this->pagosTieneSnapshot()) {
+            $query->leftJoin('planes as planes_pago', 'pagos.plan_id', '=', 'planes_pago.id')
+                ->addSelect(DB::raw('COALESCE(pagos.plan_id, suscripciones.plan_id) as plan_id'))
+                ->addSelect(DB::raw('COALESCE(planes_pago.nombre, planes_actuales.nombre) as plan_nombre'));
+        }
+
+        return $query->first();
+    }
+
     public function obtenerPagos()
     {
         $query = DB::table('pagos')
@@ -40,19 +77,32 @@ class PagosService
 
     public function listarPagosPlanEmpresa($empresa_id)
     {
-        return DB::table('suscripciones')
+        $query = DB::table('suscripciones')
             ->join('planes as planes_actuales', 'suscripciones.plan_id', '=', 'planes_actuales.id')
             ->where('suscripciones.empresa_id', $empresa_id)
-            ->where('suscripciones.estado_id', 4)
             ->select(
                 'suscripciones.id',
                 'suscripciones.plan_id',
                 'suscripciones.fecha_inicio',
                 'suscripciones.fecha_vencimiento',
                 'planes_actuales.nombre as plan_nombre'
-            )
-            ->orderByDesc('suscripciones.id')
-            ->first();
+            );
+
+        $estadoActivoId = $this->obtenerEstadoActivoId();
+
+        if ($estadoActivoId !== null) {
+            $suscripcionActiva = (clone $query)
+                ->where('suscripciones.estado_id', $estadoActivoId)
+                ->orderByDesc('suscripciones.id')
+                ->first();
+
+            if ($suscripcionActiva) {
+                return $suscripcionActiva;
+            }
+        }
+
+        // Si no hay suscripción activa, devolver la última existente para clientes antiguos.
+        return $query->orderByDesc('suscripciones.id')->first();
     }
 
     private function resolveTipoPago(?object $suscripcionActual, int $planId): string
@@ -81,9 +131,25 @@ class PagosService
 
     private function obtenerSuscripcionActiva(int $empresaId): ?object
     {
+        $query = DB::table('suscripciones')
+            ->where('empresa_id', $empresaId)
+            ->orderByDesc('id');
+
+        $estadoActivoId = $this->obtenerEstadoActivoId();
+
+        if ($estadoActivoId !== null) {
+            $query->where('estado_id', $estadoActivoId);
+        } else {
+            $query->where('estado_id', 4);
+        }
+
+        return $query->first();
+    }
+
+    private function obtenerUltimaSuscripcionEmpresa(int $empresaId): ?object
+    {
         return DB::table('suscripciones')
             ->where('empresa_id', $empresaId)
-            ->where('estado_id', 4)
             ->orderByDesc('id')
             ->first();
     }
@@ -145,7 +211,7 @@ class PagosService
 
     public function registrarPagoManual($data)
     {
-        $suscripcion = DB::transaction(function () use ($data) {
+        $pagoDetallado = DB::transaction(function () use ($data) {
             $empresaId = (int) $data['empresa_id'];
             $planId = (int) $data['plan_id'];
             $metodoPagoId = $data['metodo_pago_id'];
@@ -160,7 +226,8 @@ class PagosService
                 ->value('id') ?? 1;
 
             $suscripcionActual = $this->obtenerSuscripcionActiva($empresaId);
-            $tipoPago = $this->resolveTipoPago($suscripcionActual, $planId);
+            $suscripcionReferencia = $suscripcionActual ?: $this->obtenerUltimaSuscripcionEmpresa($empresaId);
+            $tipoPago = $this->resolveTipoPago($suscripcionReferencia, $planId);
 
             if ($suscripcionActual) {
                 DB::table('suscripciones')
@@ -209,7 +276,7 @@ class PagosService
                 $pagoInsert['tipo_pago'] = $tipoPago;
             }
 
-            DB::table('pagos')->insert($pagoInsert);
+            $pagoId = DB::table('pagos')->insertGetId($pagoInsert);
 
             $plan = DB::table('planes')->where('id', $planId)->first();
             DB::table('empresas')
@@ -221,12 +288,12 @@ class PagosService
                     'updated_at' => now(),
                 ]);
 
-            return DB::table('pagos')->where('suscripcion_id', $suscripcionId)->orderByDesc('id')->first();
+            return $this->obtenerPagoDetalladoPorId((int) $pagoId);
         });
 
         return [
             'message' => 'Pago manual registrado exitosamente',
-            'data' => $suscripcion
+            'data' => $pagoDetallado
         ];
     }
 }
