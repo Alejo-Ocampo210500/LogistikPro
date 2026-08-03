@@ -15,7 +15,7 @@ class ImpuestosSeeder extends Seeder
     {
         $empresaId = Empresa::query()->value('id');
 
-        if (!$empresaId) {
+        if (! $empresaId) {
             return;
         }
 
@@ -47,16 +47,20 @@ class ImpuestosSeeder extends Seeder
         ];
 
         foreach ($impuestos as $impuestoData) {
-            Impuesto::create([
-                'empresa_id' => $empresaId,
-                'nombre' => $impuestoData['nombre'],
-                'codigo' => $impuestoData['codigo'],
-                'porcentaje' => $impuestoData['porcentaje'],
-                'descripcion' => $impuestoData['descripcion'],
-                'estado_id' => 1,
-                'creado_por' => 1,
-                'actualizado_por' => 1,
-            ]);
+            Impuesto::updateOrCreate(
+                [
+                    'empresa_id' => $empresaId,
+                    'codigo' => $impuestoData['codigo'],
+                ],
+                [
+                    'nombre' => $impuestoData['nombre'],
+                    'porcentaje' => $impuestoData['porcentaje'],
+                    'descripcion' => $impuestoData['descripcion'],
+                    'estado_id' => 1,
+                    'creado_por' => 1,
+                    'actualizado_por' => 1,
+                ]
+            );
         }
     }
 }

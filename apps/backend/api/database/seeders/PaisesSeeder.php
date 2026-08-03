@@ -17,7 +17,10 @@ class PaisesSeeder extends Seeder
         ];
 
         foreach ($paises as $paisData) {
-            Pais::create($paisData);
+            Pais::updateOrCreate(
+                ['codigo_iso' => $paisData['codigo_iso']],
+                $paisData
+            );
         }
     }
 }
