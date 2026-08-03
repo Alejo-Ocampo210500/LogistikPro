@@ -14,6 +14,8 @@
           <tr>
             <th>Empresa</th>
             <th>NIT</th>
+            <th>Departamento</th>
+            <th>Ciudad</th>
             <th>Plan</th>
             <th>Usuarios</th>
             <th>Estado</th>
@@ -27,6 +29,8 @@
               <small>{{ empresa.razon_social }}</small>
             </td>
             <td>{{ empresa.nit }}</td>
+            <td>{{ getDepartamentoNombre(empresa) }}</td>
+            <td>{{ getCiudadNombre(empresa) }}</td>
             <td>
               <span :class="['plan-badge', `plan-${empresa.plan}`]">
                 {{ formatPlan(empresa.plan) }}
@@ -87,6 +91,14 @@ export default {
   },
 
   methods: {
+    getDepartamentoNombre(empresa) {
+      return empresa?.departamento || empresa?.departamento_nombre || empresa?.departamento?.nombre || '-';
+    },
+
+    getCiudadNombre(empresa) {
+      return empresa?.ciudad || empresa?.ciudad_nombre || empresa?.ciudad?.nombre || '-';
+    },
+
     formatPlan(value) {
       if (!value) {
         return '-';

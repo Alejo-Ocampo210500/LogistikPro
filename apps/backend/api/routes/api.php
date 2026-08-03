@@ -116,13 +116,11 @@ Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
     Route::get('/paises', [PanelPaisesClienteController::class, 'obtenerPaisesCliente']);
 });
 
-Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
-    Route::get('/departamentos', [PanelDepartamentosClienteController::class, 'obtenerDepartamentosCliente']);
-});
+Route::get('/departamentos', [PanelDepartamentosClienteController::class, 'obtenerDepartamentosCliente'])
+    ->middleware(['auth:sanctum']);
 
-Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
-    Route::get('/ciudades', [PanelCiudadesClienteController::class, 'obtenerCiudadesCliente']);
-});
+Route::get('/ciudades', [PanelCiudadesClienteController::class, 'obtenerCiudadesCliente'])
+    ->middleware(['auth:sanctum']);
 
 Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
     Route::get('/tipo-documento', [PanelTipoDocumentoClienteController::class, 'obtenerTipoDocumentosCliente']);

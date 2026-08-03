@@ -24,19 +24,10 @@
         </label>
       </div>
 
-      <div class="grid grid-3">
+      <div class="grid grid-2">
         <label class="field">
           <span>NIT</span>
           <input v-model.trim="form.nit" type="text" placeholder="900000123" />
-        </label>
-
-        <label class="field">
-          <span>Plan</span>
-          <select v-model.number="form.plan_id">
-            <option v-for="option in planes" :key="option.id || option" :value="option.id">
-              {{ formatPlan(option) }}
-            </option>
-          </select>
         </label>
 
         <label class="field">
@@ -45,20 +36,15 @@
         </label>
       </div>
 
-      <div class="grid grid-2">
+      <div class="grid grid-1">
         <label class="field">
           <span>Correo de la empresa</span>
           <input v-model.trim="form.email" type="email" placeholder="contacto@empresa.com" />
         </label>
-
-        <label class="field">
-          <span>Fecha de vencimiento</span>
-          <input v-model="form.fecha_vencimiento" type="date" />
-        </label>
       </div>
 
-      <div class="grid grid-2">
-        <label class="field">
+      <div :class="['grid', isEditMode ? 'grid-2' : 'grid-1']">
+        <label v-if="isEditMode" class="field">
           <span>Estado</span>
           <select v-model.number="form.estado_id">
             <option v-for="est in estados" :key="est.id" :value="est.id">
@@ -81,12 +67,22 @@
       <div class="grid grid-2">
         <label class="field">
           <span>Ciudad</span>
-          <input v-model.trim="form.ciudad" type="text" placeholder="Medellín" />
+          <select v-model.number="form.ciudad_id">
+            <option :value="null">Selecciona una ciudad</option>
+            <option v-for="ciudad in ciudadesDisponibles" :key="ciudad.id" :value="ciudad.id">
+              {{ ciudad.nombre }}
+            </option>
+          </select>
         </label>
 
         <label class="field">
           <span>Departamento</span>
-          <input v-model.trim="form.departamento" type="text" placeholder="Antioquia" />
+          <select v-model.number="form.departamento_id" :disabled="!form.ciudad_id">
+            <option :value="null">Selecciona un departamento</option>
+            <option v-for="departamento in departamentosDisponibles" :key="departamento.id" :value="departamento.id">
+              {{ departamento.nombre }}
+            </option>
+          </select>
         </label>
       </div>
 
@@ -151,6 +147,8 @@
 </template>
 
 <script>
+import api from '@/services/api';
+
 export default {
   name: 'EmpresaForm',
 
@@ -187,12 +185,12 @@ export default {
         email: '',
         telefono: '',
         direccion: '',
+        ciudad_id: null,
+        departamento_id: null,
         ciudad: '',
         departamento: '',
         logo: '',
-        plan_id: null,
         estado_id: null,
-        fecha_vencimiento: '',
         admin_nombre: '',
         admin_apellido: '',
         admin_email_user: '',
@@ -201,6 +199,8 @@ export default {
         admin_password: '',
       },
       showAdminPassword: false,
+      departamentos: [],
+      ciudades: [],
       validationMessage: '',
       validationTimer: null,
     };
@@ -209,6 +209,25 @@ export default {
   computed: {
     isEditMode() {
       return this.mode === 'editar';
+    },
+
+    ciudadesDisponibles() {
+      return this.ciudades;
+    },
+
+    departamentosDisponibles() {
+      const ciudadId = Number(this.form.ciudad_id || 0);
+
+      if (!ciudadId) {
+        return this.departamentos;
+      }
+
+      const ciudad = this.ciudades.find((item) => Number(item.id) === ciudadId);
+      if (!ciudad) {
+        return this.departamentos;
+      }
+
+      return this.departamentos.filter((item) => Number(item.id) === Number(ciudad.departamento_id));
     },
   },
 
@@ -223,19 +242,116 @@ export default {
         }
       },
     },
+
+    'form.ciudad_id'() {
+      if (!this.form.ciudad_id) {
+        this.form.departamento_id = null;
+        return;
+      }
+
+      const ciudad = this.ciudades.find((item) => Number(item.id) === Number(this.form.ciudad_id));
+      this.form.departamento_id = ciudad ? Number(ciudad.departamento_id) : null;
+    },
+
+    'form.departamento_id'() {
+      if (!this.form.ciudad_id || !this.form.departamento_id) {
+        return;
+      }
+
+      const ciudad = this.ciudades.find((item) => Number(item.id) === Number(this.form.ciudad_id));
+      const coincide = ciudad && Number(ciudad.departamento_id) === Number(this.form.departamento_id);
+
+      if (!coincide) {
+        this.form.ciudad_id = null;
+      }
+    },
+  },
+
+  mounted() {
+    this.cargarCatalogosUbicacion();
+  },
+
+  beforeDestroy() {
+    this.clearValidationTimer();
   },
 
   methods: {
-    formatPlan(value) {
-      if (!value) {
-        return '-';
+    extraerListaCatalogo(payload, posiblesLlaves = []) {
+      if (Array.isArray(payload)) {
+        if (payload.length === 1 && Array.isArray(payload[0])) {
+          return payload[0];
+        }
+
+        return payload;
       }
 
-      if (typeof value === 'object' && value.nombre) {
-        value = value.nombre;
+      if (payload && typeof payload === 'object') {
+        for (const llave of posiblesLlaves) {
+          if (Array.isArray(payload[llave])) {
+            return payload[llave];
+          }
+        }
+
+        const primeraLista = Object.values(payload).find((value) => Array.isArray(value));
+        return Array.isArray(primeraLista) ? primeraLista : [];
       }
 
-      return String(value).charAt(0).toUpperCase() + String(value).slice(1);
+      return [];
+    },
+
+    async cargarCatalogosUbicacion() {
+      try {
+        const [departamentosRes, ciudadesRes] = await Promise.all([
+          api.get('/departamentos'),
+          api.get('/ciudades'),
+        ]);
+
+        this.departamentos = this.extraerListaCatalogo(departamentosRes?.data, ['departamentos']);
+        this.ciudades = this.extraerListaCatalogo(ciudadesRes?.data, ['ciudades']);
+
+        if (this.form.id) {
+          this.form.departamento_id = this.resolverDepartamentoId(this.form.departamento_id, this.form.departamento);
+          this.form.ciudad_id = this.resolverCiudadId(this.form.ciudad_id, this.form.ciudad, this.form.departamento_id);
+        }
+      } catch (error) {
+        this.departamentos = [];
+        this.ciudades = [];
+      }
+    },
+
+    resolverDepartamentoId(actualId, nombreDepartamento) {
+      const numericId = Number(actualId || 0);
+      if (numericId > 0) {
+        return numericId;
+      }
+
+      const nombre = String(nombreDepartamento || '').trim().toLowerCase();
+      if (!nombre) {
+        return null;
+      }
+
+      const match = this.departamentos.find((item) => String(item.nombre || '').trim().toLowerCase() === nombre);
+      return match ? Number(match.id) : null;
+    },
+
+    resolverCiudadId(actualId, nombreCiudad, departamentoId) {
+      const numericId = Number(actualId || 0);
+      if (numericId > 0) {
+        return numericId;
+      }
+
+      const nombre = String(nombreCiudad || '').trim().toLowerCase();
+      if (!nombre) {
+        return null;
+      }
+
+      const match = this.ciudades.find(
+        (item) =>
+          String(item.nombre || '').trim().toLowerCase() === nombre &&
+          (!departamentoId || Number(item.departamento_id) === Number(departamentoId))
+      );
+
+      return match ? Number(match.id) : null;
     },
 
     clearValidationTimer() {
@@ -246,95 +362,85 @@ export default {
     },
 
     showValidationMessage(text) {
-        this.clearValidationTimer();
-        this.validationMessage = text;
-        this.validationTimer = window.setTimeout(() => {
-          this.validationMessage = '';
-          this.validationTimer = null;
-        }, 3000);
-      },
+      this.clearValidationTimer();
+      this.validationMessage = text;
+      this.validationTimer = window.setTimeout(() => {
+        this.validationMessage = '';
+        this.validationTimer = null;
+      }, 3000);
+    },
 
     validateForm() {
-        const requiredFields = [
-          { value: this.form.nombre_comercial, label: 'Nombre comercial' },
-          { value: this.form.razon_social, label: 'Razón social' },
-          { value: this.form.nit, label: 'NIT' },
-          { value: this.form.email, label: 'Correo de la empresa' },
-          { value: this.form.telefono, label: 'Teléfono' },
-          { value: this.form.direccion, label: 'Dirección' },
-          { value: this.form.ciudad, label: 'Ciudad' },
-          { value: this.form.departamento, label: 'Departamento' },
+      const requiredFields = [
+        { value: this.form.nombre_comercial, label: 'Nombre comercial' },
+        { value: this.form.razon_social, label: 'Razón social' },
+        { value: this.form.nit, label: 'NIT' },
+        { value: this.form.email, label: 'Correo de la empresa' },
+        { value: this.form.telefono, label: 'Teléfono' },
+        { value: this.form.direccion, label: 'Dirección' },
+        { value: this.form.ciudad_id, label: 'Ciudad' },
+        { value: this.form.departamento_id, label: 'Departamento' },
+      ];
+
+      for (const field of requiredFields) {
+        if (!field.value) {
+          this.showValidationMessage(`Por favor completa el campo ${field.label}.`);
+          return false;
+        }
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.form.email)) {
+        this.showValidationMessage('Por favor ingresa un correo de empresa válido.');
+        return false;
+      }
+
+      if (!this.isEditMode) {
+        const adminFields = [
+          { value: this.form.admin_nombre, label: 'Nombres del administrador' },
+          { value: this.form.admin_apellido, label: 'Apellidos del administrador' },
+          { value: this.form.admin_email_user, label: 'Usuario del administrador' },
+          { value: this.form.admin_telefono, label: 'Teléfono del administrador' },
+          { value: this.form.admin_password, label: 'Contraseña inicial' },
         ];
 
-        for (const field of requiredFields) {
+        for (const field of adminFields) {
           if (!field.value) {
             this.showValidationMessage(`Por favor completa el campo ${field.label}.`);
             return false;
           }
         }
 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(this.form.email)) {
-          this.showValidationMessage('Por favor ingresa un correo de empresa válido.');
+        const adminEmail = this.buildAdminEmail();
+
+        if (!emailPattern.test(adminEmail)) {
+          this.showValidationMessage('Por favor ingresa un usuario de administrador válido.');
           return false;
         }
 
-        if (!this.form.plan_id) {
-          this.showValidationMessage('Selecciona un plan para la empresa.');
+        const pwd = this.form.admin_password;
+        if (pwd.length < 8) {
+          this.showValidationMessage('La contraseña debe tener al menos 8 caracteres.');
           return false;
         }
-
-        if (!this.form.fecha_vencimiento) {
-          this.showValidationMessage('Por favor selecciona una fecha de vencimiento.');
+        if (!/[0-9]/.test(pwd)) {
+          this.showValidationMessage('La contraseña debe contener al menos un número.');
           return false;
         }
-
-        if (!this.isEditMode) {
-          const adminFields = [
-            { value: this.form.admin_nombre, label: 'Nombres del administrador' },
-            { value: this.form.admin_apellido, label: 'Apellidos del administrador' },
-            { value: this.form.admin_email_user, label: 'Usuario del administrador' },
-            { value: this.form.admin_telefono, label: 'Teléfono del administrador' },
-            { value: this.form.admin_password, label: 'Contraseña inicial' },
-          ];
-
-          for (const field of adminFields) {
-            if (!field.value) {
-              this.showValidationMessage(`Por favor completa el campo ${field.label}.`);
-              return false;
-            }
-          }
-
-          const adminEmail = this.buildAdminEmail();
-
-          if (!emailPattern.test(adminEmail)) {
-            this.showValidationMessage('Por favor ingresa un usuario de administrador válido.');
-            return false;
-          }
-
-          const pwd = this.form.admin_password;
-          if (pwd.length < 8) {
-            this.showValidationMessage('La contraseña debe tener al menos 8 caracteres.');
-            return false;
-          }
-          if (!/[0-9]/.test(pwd)) {
-            this.showValidationMessage('La contraseña debe contener al menos un número.');
-            return false;
-          }
-          if (!/[A-Z]/.test(pwd)) {
-            this.showValidationMessage('La contraseña debe contener al menos una letra mayúscula.');
-            return false;
-          }
-          if (!/[a-z]/.test(pwd)) {
-            this.showValidationMessage('La contraseña debe contener al menos una letra minúscula.');
-            return false;
-          }
+        if (!/[A-Z]/.test(pwd)) {
+          this.showValidationMessage('La contraseña debe contener al menos una letra mayúscula.');
+          return false;
         }
+        if (!/[a-z]/.test(pwd)) {
+          this.showValidationMessage('La contraseña debe contener al menos una letra minúscula.');
+          return false;
+        }
+      }
 
-        this.clearValidationTimer();
-        this.validationMessage = '';
-        return true;
-      },
+      this.clearValidationTimer();
+      this.validationMessage = '';
+      return true;
+    },
 
     attemptSubmit() {
       if (!this.isEditMode && !this.form.admin_email_user) {
@@ -349,18 +455,12 @@ export default {
         return;
       }
 
-        this.form.admin_email = this.buildAdminEmail();
-        this.$emit('start-action', this.isEditMode ? 'Actualizando empresa...' : 'Creando empresa...', null, null);
-        this.$emit('submit', { ...this.form });
-      },
-
-    beforeDestroy() {
-      this.clearValidationTimer();
+      this.form.admin_email = this.buildAdminEmail();
+      this.$emit('start-action', this.isEditMode ? 'Actualizando empresa...' : 'Creando empresa...', null, null);
+      this.$emit('submit', { ...this.form });
     },
 
     populate(empresa) {
-      const selectedPlan = this.planes.find(plan => plan.id === empresa.plan_id || plan.nombre === empresa.plan);
-
       this.form = {
         id: empresa.id,
         nombre_comercial: empresa.nombre_comercial || '',
@@ -369,12 +469,12 @@ export default {
         email: empresa.email || '',
         telefono: empresa.telefono || '',
         direccion: empresa.direccion || '',
+        ciudad_id: empresa.ciudad_id ? Number(empresa.ciudad_id) : null,
+        departamento_id: empresa.departamento_id ? Number(empresa.departamento_id) : null,
         ciudad: empresa.ciudad || '',
         departamento: empresa.departamento || '',
         logo: empresa.logo || '',
-        plan_id: selectedPlan ? selectedPlan.id : empresa.plan_id || null,
         estado_id: empresa.estado_id || null,
-        fecha_vencimiento: empresa.fecha_vencimiento ? String(empresa.fecha_vencimiento).slice(0, 10) : '',
         admin_nombre: '',
         admin_apellido: '',
         admin_email_user: '',
@@ -382,6 +482,11 @@ export default {
         admin_telefono: '',
         admin_password: '',
       };
+
+      if (this.departamentos.length || this.ciudades.length) {
+        this.form.departamento_id = this.resolverDepartamentoId(this.form.departamento_id, this.form.departamento);
+        this.form.ciudad_id = this.resolverCiudadId(this.form.ciudad_id, this.form.ciudad, this.form.departamento_id);
+      }
     },
 
     reset() {
@@ -393,12 +498,12 @@ export default {
         email: '',
         telefono: '',
         direccion: '',
+        ciudad_id: null,
+        departamento_id: null,
         ciudad: '',
         departamento: '',
         logo: '',
-        plan_id: this.planes.length ? this.planes[0].id : null,
-        estado_id: this.estados.length ? this.estados[0].id : null,
-        fecha_vencimiento: '',
+        estado_id: null,
         admin_nombre: '',
         admin_apellido: '',
         admin_email_user: '',
@@ -438,8 +543,8 @@ export default {
         .replace(/(^\.|\.$)/g, '')
         .replace(/\.{2,}/g, '.');
     },
-    },
-  };
+  },
+};
 </script>
 
 <style scoped>
@@ -481,6 +586,10 @@ h2 {
 .grid {
   display: grid;
   gap: 14px;
+}
+
+.grid-1 {
+  grid-template-columns: 1fr;
 }
 
 .grid-2 {
