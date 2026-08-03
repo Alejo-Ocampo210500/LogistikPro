@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Ciudades\ciudad;
+use App\Models\Estados\Estado;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CiudadesSeeder extends Seeder
@@ -12,6 +14,9 @@ class CiudadesSeeder extends Seeder
      */
     public function run(): void
     {
+        $estadoActivoId = Estado::where('nombre', 'Activo')->value('id');
+        $usuarioId = User::query()->value('id');
+
         $ciudades = [
             ['departamento_id' => 1, 'nombre' => 'Leticia'],
             ['departamento_id' => 1, 'nombre' => 'Puerto Nariño'],
@@ -1127,8 +1132,8 @@ class CiudadesSeeder extends Seeder
                 ],
                 [
                     'codigo' => null,
-                    'estado_id' => 1,
-                    'creado_por' => 1,
+                    'estado_id' => $estadoActivoId,
+                    'creado_por' => $usuarioId,
                 ]
             );
         }
