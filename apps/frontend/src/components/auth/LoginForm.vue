@@ -39,8 +39,13 @@
             placeholder="Ingresa tu contraseña"
             :disabled="loading"
           />
-          <button type="button" class="ghost-button" @click="showPassword = !showPassword">
-            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+          <button
+            type="button"
+            class="ghost-button"
+            @click="showPassword = !showPassword"
+            :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <i :class="showPassword ? 'mdi mdi-eye-off-outline' : 'mdi mdi-eye-outline'"></i>
           </button>
         </div>
       </label>
@@ -294,26 +299,61 @@ h2 {
 
 .password-wrap input {
   width: 100%;
-  padding-right: 80px;
+  padding-right: 64px;
 }
 
 .ghost-button {
   position: absolute;
-  right: 16px;
+  right: 12px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) !important;
   border: 0;
-  background: transparent;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.8) !important;
   cursor: pointer;
   padding: 0;
-  white-space: nowrap;
-  transition: color 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+  filter: none !important;
+  transition: none !important;
+  animation: none !important;
   z-index: 2;
 }
 
+.ghost-button i {
+  font-size: 1.1rem;
+}
+
+.ghost-button::before,
+.ghost-button::after {
+  content: none !important;
+  display: none !important;
+  animation: none !important;
+}
+
 .ghost-button:hover:not(:disabled) {
-  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-50%) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.ghost-button:active:not(:disabled) {
+  transform: translateY(-50%) !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.login-card .ghost-button,
+.login-card .ghost-button:hover:not(:disabled),
+.login-card .ghost-button:active:not(:disabled) {
+  transform: translateY(-50%) !important;
 }
 
 .helpers {
@@ -344,23 +384,28 @@ h2 {
   letter-spacing: 0.02em;
   cursor: pointer;
   box-shadow: 0 18px 30px rgba(244, 183, 64, 0.28);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  transition: box-shadow 0.18s ease, opacity 0.18s ease;
   position: relative;
   overflow: hidden;
 }
 
 .submit-button:hover:not(:disabled) {
-  transform: translateY(-1px);
+  transform: none;
   box-shadow: 0 22px 34px rgba(244, 183, 64, 0.34);
 }
 
 .submit-button:active:not(:disabled) {
-  transform: translateY(1px) scale(0.988);
+  transform: none;
 }
 
 .submit-button:disabled {
   opacity: 0.72;
   cursor: wait;
+}
+
+.login-card button:not(.ghost-button):hover:not(:disabled),
+.login-card button:not(.ghost-button):active:not(:disabled) {
+  transform: none !important;
 }
 
 .button-inline {

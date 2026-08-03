@@ -18,7 +18,7 @@ class PanelMantenimientoService
     public function actualizarUsuarioGlobal($usuarioId, $data)
     {
         $usuario = User::findOrFail($usuarioId);
-        $usuario->update([
+        $payload = [
 
             'nombre' => $data['nombre'],
 
@@ -30,7 +30,13 @@ class PanelMantenimientoService
 
             'estado_id' => $data['estado_id'],
 
-        ]);
+        ];
+
+        if (!empty($data['password'])) {
+            $payload['password'] = $data['password'];
+        }
+
+        $usuario->update($payload);
         return [
             'mensaje' => 'Usuario actualizado correctamente',
             'usuario' => $usuario

@@ -124,7 +124,21 @@
 
       <label v-if="!isEditMode" class="field">
         <span>Contraseña inicial</span>
-        <input v-model="form.admin_password" type="password" placeholder="Mínimo 8 caracteres" />
+        <div class="password-wrap">
+          <input
+            v-model="form.admin_password"
+            :type="showAdminPassword ? 'text' : 'password'"
+            placeholder="Mínimo 8 caracteres"
+          />
+          <button
+            type="button"
+            class="ghost-button"
+            @click="showAdminPassword = !showAdminPassword"
+            :aria-label="showAdminPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            <i :class="showAdminPassword ? 'mdi mdi-eye-off-outline' : 'mdi mdi-eye-outline'"></i>
+          </button>
+        </div>
       </label>
 
       <div class="actions">
@@ -186,6 +200,7 @@ export default {
         admin_telefono: '',
         admin_password: '',
       },
+      showAdminPassword: false,
       validationMessage: '',
       validationTimer: null,
     };
@@ -500,6 +515,46 @@ h2 {
 .field select:focus {
   border-color: rgba(250, 175, 1, 0.8);
   box-shadow: 0 0 0 4px rgba(250, 175, 1, 0.12);
+}
+
+.password-wrap {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(23, 48, 79, 0.14);
+  background: rgba(248, 250, 253, 0.96);
+}
+
+.password-wrap input {
+  border: 0;
+  border-radius: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  background: transparent;
+  padding-right: 8px;
+}
+
+.ghost-button {
+  border: 0;
+  width: 44px;
+  margin: 3px;
+  border-radius: 11px;
+  background: rgba(23, 48, 79, 0.08);
+  color: #17304f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: none;
+}
+
+.ghost-button i {
+  font-size: 1.08rem;
+}
+
+.ghost-button:hover {
+  background: rgba(23, 48, 79, 0.08);
 }
 
 .admin-email-row {
