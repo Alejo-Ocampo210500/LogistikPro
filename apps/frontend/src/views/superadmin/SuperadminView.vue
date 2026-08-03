@@ -208,7 +208,7 @@
             </div>
           </div>
 
-          <PagosEmpresa :user="session.user" @start-action="forwardActionLoader" @stop-action="forwardStopAction" @payment-updated="loadPanel" />
+          <PagosEmpresa :user="session.user" :empresas-catalogo="panel.empresas" @start-action="forwardActionLoader" @stop-action="forwardStopAction" @payment-updated="loadPanel" />
         </template>
 
         <template v-else-if="activeModule === 'empresas-planes'">
