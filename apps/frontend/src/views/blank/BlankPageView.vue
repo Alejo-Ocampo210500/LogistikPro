@@ -20,20 +20,46 @@
       </div>
 
       <div class="owner-card">
-        <span class="owner-kicker">Informacion del negocio</span>
+        <span class="owner-kicker">
+          <i class="mdi mdi-domain"></i>
+          Informacion del negocio
+        </span>
         <strong class="owner-name">{{ companyName }}</strong>
 
-        <div class="owner-plan-row">
-          <span :class="['plan-dot', planIsActive ? 'is-active' : 'is-expired']"></span>
-          <div>
-            <strong class="owner-plan">Plan {{ businessPlanName }}</strong>
-            <small class="owner-license">{{ planIsActive ? 'Licencia Activa' : 'Licencia Vencida' }}</small>
+        <small class="owner-legal-name">{{ companyLegalName }}</small>
+
+        <div class="owner-meta-grid">
+          <div class="owner-meta-item">
+            <span class="owner-meta-label">
+              <i class="mdi mdi-card-account-details-outline"></i>
+              NIT
+            </span>
+            <strong>{{ companyNit }}</strong>
+          </div>
+
+          <div class="owner-meta-item">
+            <span class="owner-meta-label">
+              <i class="mdi mdi-map-marker-radius-outline"></i>
+              Departamento
+            </span>
+            <strong>{{ companyDepartamento }}</strong>
+          </div>
+
+          <div class="owner-meta-item">
+            <span class="owner-meta-label">
+              <i class="mdi mdi-city-variant-outline"></i>
+              Ciudad
+            </span>
+            <strong>{{ companyCiudad }}</strong>
           </div>
         </div>
 
-        <div class="owner-expiry-row">
-          <span>{{ planIsActive ? 'Vence:' : 'Vencio:' }}</span>
-          <strong>{{ businessExpiryText }}</strong>
+        <div class="owner-status-row">
+          <span class="owner-meta-label owner-meta-label--status">
+            <i class="mdi mdi-check-decagram-outline"></i>
+            Estado
+          </span>
+          <strong :class="['owner-status-pill', companyStatusClass]">{{ companyStatus }}</strong>
         </div>
 
         <!-- <small class="owner-meta">Empresa ID: {{ companyIdText }}</small> -->
@@ -170,6 +196,44 @@ export default {
   computed: {
     companyName() {
       return this.session?.empresa?.nombre_comercial || 'Espacio de trabajo';
+    },
+    companyLegalName() {
+      return this.session?.empresa?.razon_social || 'Razon social no registrada';
+    },
+    companyNit() {
+      return this.session?.empresa?.nit || 'No registrado';
+    },
+    companyDepartamento() {
+      return this.session?.empresa?.departamento || this.session?.empresa?.departamento_nombre || 'No registrado';
+    },
+    companyCiudad() {
+      return this.session?.empresa?.ciudad || this.session?.empresa?.ciudad_nombre || 'No registrada';
+    },
+    companyStatus() {
+      const estado = this.session?.empresa?.estado;
+
+      if (estado && typeof estado === 'object') {
+        return estado.nombre || 'No definido';
+      }
+
+      if (typeof estado === 'string' && estado.trim()) {
+        return estado;
+      }
+
+      return this.session?.empresa?.estado_plan || this.session?.empresa?.estado_suscripcion || 'No definido';
+    },
+    companyStatusClass() {
+      const value = String(this.companyStatus || '').toLowerCase();
+
+      if (value.includes('activo')) {
+        return 'is-active';
+      }
+
+      if (value.includes('inactivo') || value.includes('bloque') || value.includes('cancel') || value.includes('suspend')) {
+        return 'is-inactive';
+      }
+
+      return 'is-neutral';
     },
     companyIdText() {
       return this.session?.empresa_id || this.session?.user?.empresa_id || 'Sin asignar';
@@ -534,59 +598,79 @@ export default {
 }
 
 .owner-kicker {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   font-size: 0.68rem;
   color: rgba(245, 247, 255, 0.62);
 }
 
+.owner-kicker i {
+  font-size: 13px;
+  color: rgba(244, 183, 64, 0.92);
+}
+
 .owner-name {
   display: block;
-  margin: 10px 0 12px;
+  margin: 10px 0 4px;
   font-size: 1rem;
   color: #ffffff;
 }
 
-.owner-plan-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.plan-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex: 0 0 auto;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
-}
-
-.plan-dot.is-active {
-  background: #22c55e;
-}
-
-.plan-dot.is-expired {
-  background: #ef4444;
-}
-
-.owner-plan {
+.owner-legal-name {
   display: block;
-  margin-bottom: 2px;
-  color: #f8fafc;
-  font-size: 0.92rem;
-}
-
-.owner-license {
-  color: rgba(245, 247, 255, 0.74);
+  margin: 0 0 12px;
+  color: rgba(245, 247, 255, 0.7);
   font-size: 0.78rem;
 }
 
-.owner-expiry-row {
+.owner-meta-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.owner-meta-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.owner-meta-item span {
+  color: rgba(245, 247, 255, 0.66);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.owner-meta-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.owner-meta-label i {
+  font-size: 14px;
+  color: rgba(244, 183, 64, 0.9);
+}
+
+.owner-meta-label--status i {
+  font-size: 13px;
+}
+
+.owner-meta-item strong {
+  color: #f8fafc;
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.owner-status-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -594,14 +678,34 @@ export default {
   margin-top: 10px;
 }
 
-.owner-expiry-row span {
+.owner-status-row span {
   color: rgba(245, 247, 255, 0.68);
-  font-size: 0.8rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-.owner-expiry-row strong {
-  color: #f8fafc;
-  font-size: 0.84rem;
+.owner-status-pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.owner-status-pill.is-active {
+  background: rgba(109, 211, 160, 0.2);
+  color: #d2ffe8;
+}
+
+.owner-status-pill.is-inactive {
+  background: rgba(255, 123, 123, 0.22);
+  color: #ffd6d6;
+}
+
+.owner-status-pill.is-neutral {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fef3c7;
 }
 
 .owner-meta {
