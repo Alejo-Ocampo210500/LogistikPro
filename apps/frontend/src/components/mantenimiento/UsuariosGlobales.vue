@@ -83,6 +83,17 @@
                                 <v-text-field v-model="form.apellido" label="Apellido" outlined dense required />
                                 <v-text-field v-model="form.telefono" label="Teléfono" outlined dense />
                                 <v-text-field v-model="form.email" label="Correo electrónico" outlined dense required />
+                                <v-text-field
+                                    v-model="form.password"
+                                    :type="showPassword ? 'text' : 'password'"
+                                    :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                                    @click:append="showPassword = !showPassword"
+                                    label="Nueva contraseña (opcional)"
+                                    hint="Déjalo vacío si no deseas cambiarla"
+                                    persistent-hint
+                                    outlined
+                                    dense
+                                />
                                 <v-select v-model="form.estado_id" :items="estados" item-text="nombre" item-value="id"
                                     label="Estado" outlined dense />
                             </div>
@@ -122,12 +133,14 @@ export default {
             dialog: false,
             isEditMode: false,
             selectedUserId: null,
+            showPassword: false,
 
             form: {
                 nombre: '',
                 apellido: '',
                 telefono: '',
                 email: '',
+                password: '',
                 estado_id: null,
             },
 
@@ -183,10 +196,15 @@ export default {
             this.$emit('start-action', 'Actualizando usuario global...');
 
             try {
+                const payload = { ...this.form };
+
+                if (!payload.password) {
+                    delete payload.password;
+                }
 
                 await api.put(
                     `/mantenimiento/editar-usuarios-globales/${this.selectedUserId}`,
-                    this.form
+                    payload
                 );
 
                 this.dialog = false;
@@ -231,8 +249,11 @@ export default {
                 apellido: usuario.apellido,
                 telefono: usuario.telefono,
                 email: usuario.email,
+                password: '',
                 estado_id: usuario.estado_id,
             };
+
+            this.showPassword = false;
 
             this.dialog = true;
         },

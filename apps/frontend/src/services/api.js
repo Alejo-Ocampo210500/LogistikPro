@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const defaultApiBaseUrl = process.env.NODE_ENV === 'production'
+  ? '/api'
+  : 'http://127.0.0.1:8000/api';
+
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_BASE_URL || 'http://127.0.0.1:8000/api',
+  baseURL: process.env.VUE_APP_API_BASE_URL || defaultApiBaseUrl,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',

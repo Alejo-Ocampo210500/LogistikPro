@@ -139,11 +139,25 @@
               {{ pwdValidationMessage }}
             </div>
 
-            <div class="field" style="display: flex; flex-direction: column; gap: 8px;">
-              <label style="font-weight: 700; color: #17304f;">Nueva contraseña</label>
-              <input v-model="newPassword" type="password"
-                placeholder="Mínimo 8 caracteres, 1 número, 1 mayúscula y 1 minúscula"
-                style="width: 100%; height: 50px; padding: 0 14px; border-radius: 14px; border: 1px solid rgba(23, 48, 79, 0.14); background: rgba(248, 250, 253, 0.96); color: #17304f; outline: none;" />
+            <div class="password-change-field">
+              <label class="password-change-label">Nueva contraseña</label>
+              <div class="password-change-input-wrap">
+                <span class="password-lock-badge" aria-hidden="true">
+                  <i class="mdi mdi-lock-outline"></i>
+                </span>
+                <input v-model="newPassword" :type="showNewPassword ? 'text' : 'password'"
+                  placeholder="Mínimo 8 caracteres, 1 número, 1 mayúscula y 1 minúscula"
+                  class="password-change-input" />
+                <button type="button" class="password-change-toggle" @click="showNewPassword = !showNewPassword"
+                  :aria-label="showNewPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                  <i :class="showNewPassword ? 'mdi mdi-eye-off-outline' : 'mdi mdi-eye-outline'"></i>
+                </button>
+              </div>
+              <div class="password-rules-row">
+                <span class="rule-chip">8+ caracteres</span>
+                <span class="rule-chip">1 mayúscula</span>
+                <span class="rule-chip">1 número</span>
+              </div>
             </div>
           </v-card-text>
 
@@ -194,7 +208,7 @@
             </div>
           </div>
 
-          <PagosEmpresa :user="session.user" @start-action="forwardActionLoader" @stop-action="forwardStopAction" @payment-updated="loadPanel" />
+          <PagosEmpresa :user="session.user" :empresas-catalogo="panel.empresas" @start-action="forwardActionLoader" @stop-action="forwardStopAction" @payment-updated="loadPanel" />
         </template>
 
         <template v-else-if="activeModule === 'empresas-planes'">
@@ -390,6 +404,7 @@ export default {
       changePasswordDialog: false,
       selectedPasswordEmpresa: null,
       newPassword: '',
+      showNewPassword: false,
       pwdValidationMessage: '',
       estados: [],
       panel: {
@@ -435,6 +450,7 @@ export default {
     openChangePassword(empresa) {
       this.selectedPasswordEmpresa = empresa;
       this.newPassword = '';
+      this.showNewPassword = false;
       this.pwdValidationMessage = '';
       this.changePasswordDialog = true;
     },
@@ -443,6 +459,7 @@ export default {
       this.changePasswordDialog = false;
       this.selectedPasswordEmpresa = null;
       this.newPassword = '';
+      this.showNewPassword = false;
       this.pwdValidationMessage = '';
     },
 
@@ -989,6 +1006,91 @@ export default {
   border: 2px solid rgba(11, 21, 48, 0.24);
   border-top-color: #0b1530;
   animation: spin 0.8s linear infinite;
+}
+
+.password-change-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.password-change-label {
+  font-weight: 700;
+  color: #17304f;
+}
+
+.password-change-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(23, 48, 79, 0.14);
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(248, 250, 253, 0.98) 0%, rgba(239, 245, 252, 0.98) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.password-lock-badge {
+  width: 44px;
+  height: 44px;
+  margin-left: 4px;
+  border-radius: 11px;
+  background: rgba(23, 48, 79, 0.08);
+  color: #17304f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-change-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 50px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: #17304f;
+  outline: none;
+}
+
+.password-change-toggle {
+  width: 44px;
+  height: 44px;
+  margin-right: 4px;
+  border: 0;
+  border-radius: 11px;
+  background: rgba(23, 48, 79, 0.08);
+  color: #17304f;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: none;
+}
+
+.password-change-toggle i {
+  font-size: 1.08rem;
+}
+
+.password-change-toggle:hover {
+  background: rgba(23, 48, 79, 0.08);
+  transform: none !important;
+}
+
+.password-rules-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rule-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(250, 175, 1, 0.14);
+  color: #7b5200;
+  font-size: 0.76rem;
+  font-weight: 800;
 }
 
 .metrics-grid {

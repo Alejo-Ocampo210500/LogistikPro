@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Empresas\Empresa;
+use App\Models\Estados\Estado;
 use App\Models\Impuesto\impuesto as Impuesto;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class ImpuestosSeeder extends Seeder
@@ -14,8 +16,10 @@ class ImpuestosSeeder extends Seeder
     public function run(): void
     {
         $empresaId = Empresa::query()->value('id');
+        $estadoActivoId = Estado::where('nombre', 'Activo')->value('id');
+        $usuarioId = User::query()->value('id');
 
-        if (!$empresaId) {
+        if (! $empresaId) {
             return;
         }
 
@@ -47,16 +51,20 @@ class ImpuestosSeeder extends Seeder
         ];
 
         foreach ($impuestos as $impuestoData) {
-            Impuesto::create([
-                'empresa_id' => $empresaId,
-                'nombre' => $impuestoData['nombre'],
-                'codigo' => $impuestoData['codigo'],
-                'porcentaje' => $impuestoData['porcentaje'],
-                'descripcion' => $impuestoData['descripcion'],
-                'estado_id' => 1,
-                'creado_por' => 1,
-                'actualizado_por' => 1,
-            ]);
+            Impuesto::updateOrCreate(
+                [
+                    'empresa_id' => $empresaId,
+                    'codigo' => $impuestoData['codigo'],
+                ],
+                [
+                    'nombre' => $impuestoData['nombre'],
+                    'porcentaje' => $impuestoData['porcentaje'],
+                    'descripcion' => $impuestoData['descripcion'],
+                    'estado_id' => $estadoActivoId,
+                    'creado_por' => $usuarioId,
+                    'actualizado_por' => $usuarioId,
+                ]
+            );
         }
     }
 }

@@ -14,29 +14,32 @@ class EstadosPagoSeeder extends Seeder
     {
         $estados = [
             [
-                'nombre'        => 'Pendiente',
-                'descripcion'   => 'Pago pendiente',
-                'activo'        => true,
+                'nombre' => 'Pendiente',
+                'descripcion' => 'Pago pendiente',
+                'activo' => true,
             ],
             [
-                'nombre'        => 'Aprobado',
-                'descripcion'   => 'Pago aprobado',
-                'activo'        => true,
+                'nombre' => 'Aprobado',
+                'descripcion' => 'Pago aprobado',
+                'activo' => true,
             ],
             [
-                'nombre'        => 'Rechazado',
-                'descripcion'   => 'Pago rechazado',
-                'activo'        => true,
+                'nombre' => 'Rechazado',
+                'descripcion' => 'Pago rechazado',
+                'activo' => true,
             ],
             [
-                'nombre'        => 'Cancelado',
-                'descripcion'   => 'Pago cancelado',
-                'activo'        => true,
+                'nombre' => 'Cancelado',
+                'descripcion' => 'Pago cancelado',
+                'activo' => true,
             ],
         ];
 
         foreach ($estados as $estado) {
-            EstadoPago::create($estado);
+            EstadoPago::updateOrCreate(
+                ['nombre' => $estado['nombre']],
+                $estado
+            );
         }
     }
 }

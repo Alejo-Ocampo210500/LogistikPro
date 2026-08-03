@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Departamentos\Departamento;
+use App\Models\Estados\Estado;
 use App\Models\Paises\Pais;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DepartamentosSeeder extends Seeder
@@ -14,6 +16,8 @@ class DepartamentosSeeder extends Seeder
     public function run(): void
     {
         $colombia = Pais::where('codigo_iso', 'CO')->first();
+        $estadoActivoId = Estado::where('nombre', 'Activo')->value('id');
+        $usuarioId = User::query()->value('id');
 
         if (! $colombia) {
             return;
@@ -63,8 +67,8 @@ class DepartamentosSeeder extends Seeder
                 ],
                 [
                     'codigo' => $departamentoData['codigo'],
-                    'estado_id' => 1,
-                    'creado_por' => 1,
+                    'estado_id' => $estadoActivoId,
+                    'creado_por' => $usuarioId,
                 ]
             );
         }

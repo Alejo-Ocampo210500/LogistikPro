@@ -9,7 +9,7 @@ class EstadoSeeder extends Seeder
 {
     public function run(): void
     {
-        Estado::insert([
+        $estados = [
             ['nombre' => 'Activo'],
             ['nombre' => 'inactivo'],
             ['nombre' => 'suspendida'],
@@ -19,6 +19,10 @@ class EstadoSeeder extends Seeder
             ['nombre' => 'Cancelada'],
             ['nombre' => 'Prueba Gratuita'],
             ['nombre' => 'Bloqueado'],
-        ]);
+        ];
+
+        foreach ($estados as $estado) {
+            Estado::firstOrCreate(['nombre' => $estado['nombre']]);
+        }
     }
 }
