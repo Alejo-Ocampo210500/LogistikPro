@@ -1185,6 +1185,13 @@ export default {
     },
 
     methods: {
+        empresaTienePagosRegistrados(empresaId) {
+            if (!empresaId) {
+                return false;
+            }
+
+            return this.pagos.some(item => Number(item.empresa_id) === Number(empresaId));
+        },
         seleccionarPlan() {
             const plan = this.planes.find(p => p.id == this.nuevoPlan);
 
@@ -1244,6 +1251,18 @@ export default {
                     );
 
                     const pagoCreado = response?.data?.data;
+
+                    if (pagoCreado && pagoCreado.id) {
+                        this.pagos = [
+                            pagoCreado,
+                            ...this.pagos.filter(item => item.id !== pagoCreado.id)
+                        ];
+                    }
+
+                    this.cancelarPagoManual();
+                    this.$toast.success(response.data.message || 'Pago manual registrado exitosamente.');
+                    this.$emit('payment-updated');
+                    this.listarPagos();
                     if (pagoCreado) {
                         this.insertarPagoManualLocal(pagoCreado, planId);
                     }
@@ -1399,6 +1418,9 @@ export default {
         async seleccionarEmpresa() {
 
             try {
+                this.suscripcionActual = null;
+
+                const tienePagos = this.empresaTienePagosRegistrados(this.empresaSeleccionada);
 
                 const response = await api.get(
                     `/suscripciones/pagos-planes/${this.empresaSeleccionada}`
@@ -1408,7 +1430,7 @@ export default {
                 console.log('Suscripción:', response.data);
 
 
-                if (response.data) {
+                if (response.data && tienePagos) {
 
                     // Tiene plan activo
                     this.suscripcionActual = response.data;
@@ -1431,7 +1453,7 @@ export default {
 
                 } else {
 
-                    // No tiene plan activo
+                    // No se muestra plan actual para empresas sin historial de pagos
                     this.suscripcionActual = null;
 
                     // Cambiar porque debe escoger un plan nuevo
@@ -1444,9 +1466,11 @@ export default {
                     this.fechaVencimiento = '';
 
 
-                    this.$toast.info(
-                        'Actualmente esta empresa no tiene un plan activo con LogistikPro Selecciona un plan'
-                    );
+                    if (response.data && !tienePagos) {
+                        this.$toast.info('Empresa nueva sin pagos registrados. Debe seleccionar un plan nuevo.');
+                    } else {
+                        this.$toast.info('Actualmente esta empresa no tiene un plan activo con LogistikPro. Selecciona un plan.');
+                    }
 
                 }
 
