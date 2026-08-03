@@ -1114,7 +1114,7 @@ button:active {
     position: fixed;
     top: 0;
     left: 0;
-    width: 290px;
+    width: min(88vw, 320px);
     height: 100vh;
     z-index: 1000;
     transform: translateX(-100%);
@@ -1206,6 +1206,16 @@ button:active {
 
   .topbar {
     flex-direction: column;
+  }
+
+  .topbar h2 {
+    font-size: clamp(1.25rem, 6vw, 1.6rem);
+    line-height: 1.15;
+  }
+
+  .topbar p {
+    font-size: 0.92rem;
+    line-height: 1.5;
   }
 
   .module-selector select {

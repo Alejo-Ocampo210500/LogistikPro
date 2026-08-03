@@ -317,3 +317,196 @@ img {
     transform: translateY(-2px) scale(0.987);
   }
 }
+
+/* Global responsive foundation for current and future modules */
+:root {
+  --lp-shell-padding-desktop: 28px;
+  --lp-shell-padding-tablet: 20px;
+  --lp-shell-padding-mobile: 14px;
+  --lp-card-radius: 20px;
+  --lp-card-radius-mobile: 16px;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+#app,
+.v-application,
+.v-application--wrap {
+  overflow-x: clip;
+}
+
+.v-application .row,
+.v-application [class*='grid'],
+.v-application [class*='toolbar'],
+.v-application [class*='content'],
+.v-application [class*='canvas'],
+.v-application [class*='shell'] {
+  min-width: 0;
+}
+
+.v-application img,
+.v-application video,
+.v-application canvas,
+.v-application svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.v-application .v-data-table,
+.v-application .v-data-table__wrapper,
+.v-application .table-wrap,
+.v-application .users-table-wrap,
+.v-application .table-card {
+  max-width: 100%;
+}
+
+.v-application .v-data-table__wrapper,
+.v-application .table-wrap,
+.v-application .users-table-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  border-radius: 14px;
+}
+
+.v-application .v-data-table__wrapper table,
+.v-application .table-wrap table,
+.v-application .users-table-wrap table,
+.v-application table {
+  width: max-content;
+  min-width: 100%;
+}
+
+.v-application .v-input,
+.v-application .v-text-field,
+.v-application .v-select,
+.v-application .v-textarea,
+.v-application .v-autocomplete {
+  max-width: 100%;
+}
+
+.v-application .v-btn,
+.v-application button,
+.v-application input,
+.v-application select,
+.v-application textarea {
+  max-width: 100%;
+}
+
+.v-application .v-dialog {
+  margin: 20px;
+}
+
+@media (max-width: 1024px) {
+  .v-application .content,
+  .v-application .client-content,
+  .v-application .module-canvas,
+  .v-application .module-shell,
+  .v-application .workspace-shell {
+    padding-left: var(--lp-shell-padding-tablet) !important;
+    padding-right: var(--lp-shell-padding-tablet) !important;
+  }
+
+  .v-application .module-toolbar,
+  .v-application .table-head,
+  .v-application .topbar,
+  .v-application .topbar-actions,
+  .v-application .confirm-actions {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .v-application .table-card,
+  .v-application .workspace-card,
+  .v-application .module-toolbar,
+  .v-application .confirm-card,
+  .v-application .flash,
+  .v-application .auth-alert {
+    border-radius: var(--lp-card-radius-mobile);
+  }
+
+  .v-application .module-toolbar,
+  .v-application .table-head,
+  .v-application .topbar-actions,
+  .v-application .confirm-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .v-application .module-toolbar button,
+  .v-application .table-head button,
+  .v-application .topbar-actions button,
+  .v-application .confirm-actions button,
+  .v-application .v-dialog .v-card__actions button {
+    width: 100%;
+  }
+
+  .v-application .topbar-title-block,
+  .v-application .workspace-hero,
+  .v-application .trial-banner-content,
+  .v-application .helpers {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .v-application .content,
+  .v-application .client-content,
+  .v-application .module-canvas,
+  .v-application .module-shell,
+  .v-application .workspace-shell {
+    padding-left: var(--lp-shell-padding-mobile) !important;
+    padding-right: var(--lp-shell-padding-mobile) !important;
+  }
+
+  .v-application .v-dialog {
+    margin: 10px !important;
+  }
+
+  .v-application .v-dialog:not(.v-dialog--fullscreen) {
+    max-width: calc(100vw - 20px) !important;
+  }
+
+  .v-application .v-dialog .v-card__actions {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .v-application .v-btn,
+  .v-application button,
+  .v-application input,
+  .v-application select,
+  .v-application textarea {
+    font-size: 16px;
+  }
+
+  .v-application [class*='kicker'] {
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (max-width: 420px) {
+  .v-application .table-card,
+  .v-application .module-toolbar,
+  .v-application .workspace-card,
+  .v-application .confirm-card,
+  .v-application .login-card {
+    padding: 14px !important;
+  }
+
+  .v-application .v-dialog .v-card__title,
+  .v-application .v-dialog .v-card__text,
+  .v-application .v-dialog .v-card__actions {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+}

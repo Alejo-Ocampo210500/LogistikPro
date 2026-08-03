@@ -998,7 +998,7 @@ button:active {
     position: fixed;
     top: 0;
     left: 0;
-    width: 300px;
+    width: min(88vw, 320px);
     height: 100vh;
     z-index: 1000;
     transform: translateX(-100%);
@@ -1118,19 +1118,22 @@ button:active {
     padding: 8px 12px;
   }
 
-  .topbar-menu-toggle {
-    display: none;
-  }
-
   .topbar-greeting {
     grid-column: 2 / 3;
-    justify-self: center;
-    text-align: center;
+    justify-self: start;
+    text-align: left;
+    min-width: 0;
+  }
+
+  .client-topbar h2 {
+    font-size: 0.92rem;
   }
 
   .logout-button--compact {
-    grid-column: 2 / 3;
+    grid-column: 3 / 4;
     align-self: center;
+    justify-self: end;
+    white-space: nowrap;
   }
 
   .module-canvas {

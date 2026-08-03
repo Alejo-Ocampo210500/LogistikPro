@@ -417,7 +417,21 @@ h2 {
 }
 
 .table-wrap {
-    overflow: visible;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+.suscripciones-table .v-data-table__wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+}
+
+.suscripciones-table .v-data-table__wrapper table {
+    width: max-content;
+    min-width: 920px;
 }
 
 .plan-name-pill {
@@ -554,5 +568,21 @@ h2 {
 .status-warning {
     background: rgba(250, 175, 1, 0.16);
     color: #996600;
+}
+
+@media (max-width: 900px) {
+    .table-card {
+        padding: 16px;
+    }
+
+    .table-head {
+        flex-direction: column;
+    }
+
+    .table-actions {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
 }
 </style>
