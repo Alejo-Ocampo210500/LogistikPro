@@ -227,6 +227,11 @@
             <div>
               <h3>Listado de empresas</h3>
             </div>
+
+            <button type="button" class="submit-button" @click="startNewCompany">
+              <i class="mdi mdi-plus"></i>
+              Nueva empresa
+            </button>
           </div>
 
           <EmpresasTable :empresas="panel.empresas" @edit="openEditModule" @supervisor="openSupervisorModule"
