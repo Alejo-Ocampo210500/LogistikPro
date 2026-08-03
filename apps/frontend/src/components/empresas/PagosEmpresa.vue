@@ -791,7 +791,8 @@
                         </v-btn>
 
 
-                        <v-btn class="gold-button" rounded dark @click="confirmarPago" data-action-loader="true">
+                        <v-btn class="gold-button" rounded dark @click="confirmarPago" :loading="isSavingManual"
+                            :disabled="isSavingManual" data-action-loader="true">
                             <v-icon left>
                                 mdi-content-save-check
                             </v-icon>
@@ -1039,6 +1040,10 @@ export default {
             type: Object,
             required: true,
         },
+        empresasCatalogo: {
+            type: Array,
+            default: () => [],
+        },
     },
     data() {
         return {
@@ -1059,6 +1064,7 @@ export default {
             observaciones: '',
             fechaInicio: '',
             fechaVencimiento: '',
+            isSavingManual: false,
             pagos: [],
             dialogDetalle: false,
             dialogHistorialDetalle: false,
@@ -1153,6 +1159,15 @@ export default {
         }
     },
     watch: {
+        empresasCatalogo: {
+            immediate: true,
+            handler(value) {
+                if (Array.isArray(value) && value.length) {
+                    this.empresas = [...value];
+                }
+            }
+        },
+
         accionPago(val) {
             if (val === 'renovar' && this.suscripcionActual) {
                 this.nuevoPlan = null;
@@ -1219,17 +1234,24 @@ export default {
                         observaciones: this.observaciones
                     };
 
-                    this.$emit('start-action', 'Registrando pago manual...', null, 2500);
+                    this.dialogPagoManual = false;
+                    this.isSavingManual = true;
+                    this.$emit('start-action', 'Registrando pago manual...');
 
                     const response = await api.post(
                         '/suscripciones/registrar-pago-manual',
                         payload
                     );
 
-                    this.cancelarPagoManual();
+                    const pagoCreado = response?.data?.data;
+                    if (pagoCreado) {
+                        this.insertarPagoManualLocal(pagoCreado, planId);
+                    }
+
+                    this.limpiarFormularioPagoManual();
                     this.$toast.success(response.data.message || 'Pago manual registrado exitosamente.');
-                    this.$emit('payment-updated');
                     await this.listarPagos();
+                    this.$emit('payment-updated');
 
                 } else {
                     const pagoId = this.pagoSeleccionado.id;
@@ -1271,7 +1293,52 @@ export default {
                 );
                 console.error(error);
             } finally {
+                this.isSavingManual = false;
                 this.$emit('stop-action');
+            }
+        },
+        limpiarFormularioPagoManual() {
+            this.dialogDecisionPlan = false;
+            this.dialogCambioPlan = false;
+            this.empresaSeleccionada = null;
+            this.empresaConPagos = null;
+            this.suscripcionActual = null;
+            this.accionPago = 'renovar';
+            this.nuevoPlan = null;
+            this.metodoPago = null;
+            this.valor = null;
+            this.referencia = '';
+            this.observaciones = '';
+            this.fechaInicio = '';
+            this.fechaVencimiento = '';
+        },
+        insertarPagoManualLocal(pagoCreado, planId) {
+            const empresa = this.empresas.find(item => Number(item.id) === Number(this.empresaSeleccionada));
+            const plan = this.planes.find(item => Number(item.id) === Number(planId));
+            const metodo = this.metodosPago.find(item => Number(item.id) === Number(this.metodoPago));
+
+            const pagoLocal = {
+                ...pagoCreado,
+                empresa_id: Number(this.empresaSeleccionada),
+                empresa_nombre: empresa?.nombre_comercial || pagoCreado?.empresa_nombre || '-',
+                plan_id: Number(planId),
+                plan_nombre: plan?.nombre || pagoCreado?.plan_nombre || '-',
+                metodo_pago: metodo?.nombre || pagoCreado?.metodo_pago || '-',
+                fecha_inicio: this.fechaInicio || pagoCreado?.fecha_inicio || null,
+                fecha_vencimiento: this.fechaVencimiento || pagoCreado?.fecha_vencimiento || null,
+                estado_pago: pagoCreado?.estado_pago || 'Aprobado',
+                estado_pago_id: pagoCreado?.estado_pago_id || 2,
+                tipo_pago: pagoCreado?.tipo_pago || (this.accionPago === 'renovar' ? 'Renovación' : 'Cambio'),
+                referencia: this.referencia || pagoCreado?.referencia || '-',
+                valor: this.valor || pagoCreado?.valor || 0,
+            };
+
+            const existente = this.pagos.some(item => Number(item.id) === Number(pagoLocal.id));
+
+            if (!existente) {
+                this.pagos = [pagoLocal, ...this.pagos].sort((a, b) =>
+                    this.ordenarFechaDesc(b) - this.ordenarFechaDesc(a) || (Number(b.id) || 0) - (Number(a.id) || 0)
+                );
             }
         },
         async listarPlanes() {
@@ -1399,33 +1466,27 @@ export default {
         cancelarPagoManual() {
 
             this.dialogPagoManual = false;
-            this.dialogDecisionPlan = false;
-            this.dialogCambioPlan = false;
-            this.empresaSeleccionada = null;
-            this.empresaConPagos = null;
-            this.suscripcionActual = null;
-            this.accionPago = 'renovar';
-            this.nuevoPlan = null;
-            this.metodoPago = null;
-            this.valor = null;
-            this.referencia = '';
-            this.observaciones = '';
-            this.fechaInicio = '';
-            this.fechaVencimiento = '';
+            this.limpiarFormularioPagoManual();
 
         },
         async listarEmpresas() {
             try {
+                if (Array.isArray(this.empresasCatalogo) && this.empresasCatalogo.length) {
+                    this.empresas = [...this.empresasCatalogo];
+                    return;
+                }
 
                 const response = await api.get('/superadmin/panel');
 
                 console.log('Respuesta panel:', response.data);
 
-                this.empresas = response.data.empresas || response.data;
+                const listado = response?.data?.empresas;
+                this.empresas = Array.isArray(listado) ? listado : [];
 
             } catch (error) {
 
                 console.error('Error al listar empresas:', error);
+                this.empresas = [];
 
             }
         },
