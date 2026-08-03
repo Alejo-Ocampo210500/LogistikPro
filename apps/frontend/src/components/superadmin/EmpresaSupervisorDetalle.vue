@@ -257,11 +257,15 @@ export default {
 }
 
 .users-table-wrap {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 table {
-  width: 100%;
+  width: max-content;
+  min-width: 700px;
   border-collapse: collapse;
 }
 
@@ -305,6 +309,10 @@ th {
 }
 
 @media (max-width: 900px) {
+  .detail-card {
+    padding: 16px;
+  }
+
   .stats-grid,
   .info-grid,
   .modules-grid {

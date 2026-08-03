@@ -207,11 +207,15 @@ h2 {
 }
 
 .table-wrap {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 table {
-  width: 100%;
+  width: max-content;
+  min-width: 1120px;
   border-collapse: collapse;
 }
 
@@ -320,8 +324,20 @@ td small {
 }
 
 @media (max-width: 900px) {
+  .table-card {
+    padding: 16px;
+  }
+
   .table-head {
     flex-direction: column;
+  }
+
+  h2 {
+    font-size: 1.24rem;
+  }
+
+  .table-count {
+    align-self: flex-start;
   }
 }
 </style>

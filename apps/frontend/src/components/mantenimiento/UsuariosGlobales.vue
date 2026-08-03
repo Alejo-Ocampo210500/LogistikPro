@@ -390,9 +390,21 @@ h2 {
 
 
 .table-wrap {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
 
-    overflow: visible;
+.usuarios-table .v-data-table__wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+}
 
+.usuarios-table .v-data-table__wrapper table {
+    width: max-content;
+    min-width: 980px;
 }
 
 
@@ -626,5 +638,20 @@ h2 {
 
     font-size: 16px;
 
+}
+
+@media (max-width: 900px) {
+    .table-card {
+        padding: 16px;
+    }
+
+    .table-head {
+        flex-direction: column;
+    }
+
+    .table-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
 }
 </style>

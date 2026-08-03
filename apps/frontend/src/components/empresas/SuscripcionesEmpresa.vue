@@ -503,11 +503,21 @@ h2 {
 }
 
 .table-wrap {
-    overflow: visible;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+.suscripciones-table .v-data-table__wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
 }
 
 .suscripciones-table .v-data-table__wrapper table {
-    width: 100%;
+    width: max-content;
+    min-width: 1120px;
     border-collapse: collapse;
 }
 
@@ -531,5 +541,19 @@ h2 {
 
 .suscripciones-table tbody tr:hover {
     background: rgba(244, 247, 255, 0.78);
+}
+
+@media (max-width: 900px) {
+    .table-card {
+        padding: 16px;
+    }
+
+    .table-head {
+        flex-direction: column;
+    }
+
+    .table-count {
+        align-self: flex-start;
+    }
 }
 </style>

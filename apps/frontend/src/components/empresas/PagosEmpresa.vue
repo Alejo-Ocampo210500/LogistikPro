@@ -2266,6 +2266,21 @@ export default {
     background: transparent;
     padding: 0;
     margin-top: 8px;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+.pagos-table .v-data-table__wrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+}
+
+.pagos-table .v-data-table__wrapper table {
+    width: max-content;
+    min-width: 1320px;
 }
 
 /* Título + Kicker */
@@ -2317,13 +2332,16 @@ export default {
 .historial-list-container {
     max-height: 250px;
     overflow-y: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     border: 1px solid #edf2f7;
     border-radius: 12px;
     background: white;
 }
 
 .historial-table {
-    width: 100%;
+    width: max-content;
+    min-width: 760px;
     border-collapse: collapse;
     font-size: 14px;
 }
@@ -2555,6 +2573,32 @@ export default {
 }
 
 @media (max-width: 700px) {
+    .table-card {
+        padding: 16px;
+    }
+
+    .table-head {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .header-actions .v-btn,
+    .header-actions .gold-button {
+        width: 100%;
+    }
+
+    .table-count {
+        align-self: flex-start;
+    }
+
     .stats-grid {
         grid-template-columns: 1fr;
     }
