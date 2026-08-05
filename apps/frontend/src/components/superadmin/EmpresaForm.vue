@@ -66,21 +66,21 @@
 
       <div class="grid grid-2">
         <label class="field">
-          <span>Ciudad</span>
-          <select v-model.number="form.ciudad_id">
-            <option :value="null">Selecciona una ciudad</option>
-            <option v-for="ciudad in ciudadesDisponibles" :key="ciudad.id" :value="ciudad.id">
-              {{ ciudad.nombre }}
+          <span>Departamento</span>
+          <select v-model.number="form.departamento_id">
+            <option :value="null">Selecciona un departamento</option>
+            <option v-for="departamento in departamentosDisponibles" :key="departamento.id" :value="departamento.id">
+              {{ departamento.nombre }}
             </option>
           </select>
         </label>
 
         <label class="field">
-          <span>Departamento</span>
-          <select v-model.number="form.departamento_id" :disabled="!form.ciudad_id">
-            <option :value="null">Selecciona un departamento</option>
-            <option v-for="departamento in departamentosDisponibles" :key="departamento.id" :value="departamento.id">
-              {{ departamento.nombre }}
+          <span>Ciudad</span>
+          <select v-model.number="form.ciudad_id" :disabled="!form.departamento_id">
+            <option :value="null">Selecciona una ciudad</option>
+            <option v-for="ciudad in ciudadesDisponibles" :key="ciudad.id" :value="ciudad.id">
+              {{ ciudad.nombre }}
             </option>
           </select>
         </label>
@@ -212,22 +212,17 @@ export default {
     },
 
     ciudadesDisponibles() {
-      return this.ciudades;
+      const departamentoId = Number(this.form.departamento_id || 0);
+
+      if (!departamentoId) {
+        return [];
+      }
+
+      return this.ciudades.filter((item) => Number(item.departamento_id) === departamentoId);
     },
 
     departamentosDisponibles() {
-      const ciudadId = Number(this.form.ciudad_id || 0);
-
-      if (!ciudadId) {
-        return this.departamentos;
-      }
-
-      const ciudad = this.ciudades.find((item) => Number(item.id) === ciudadId);
-      if (!ciudad) {
-        return this.departamentos;
-      }
-
-      return this.departamentos.filter((item) => Number(item.id) === Number(ciudad.departamento_id));
+      return this.departamentos;
     },
   },
 
@@ -243,17 +238,25 @@ export default {
       },
     },
 
-    'form.ciudad_id'() {
+    'form.departamento_id'() {
+      if (!this.form.departamento_id) {
+        this.form.ciudad_id = null;
+        return;
+      }
+
       if (!this.form.ciudad_id) {
-        this.form.departamento_id = null;
         return;
       }
 
       const ciudad = this.ciudades.find((item) => Number(item.id) === Number(this.form.ciudad_id));
-      this.form.departamento_id = ciudad ? Number(ciudad.departamento_id) : null;
+      const coincide = ciudad && Number(ciudad.departamento_id) === Number(this.form.departamento_id);
+
+      if (!coincide) {
+        this.form.ciudad_id = null;
+      }
     },
 
-    'form.departamento_id'() {
+    'form.ciudad_id'() {
       if (!this.form.ciudad_id || !this.form.departamento_id) {
         return;
       }
