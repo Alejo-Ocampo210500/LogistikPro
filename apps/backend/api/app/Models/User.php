@@ -4,8 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Caja\Caja;
 use App\Models\Categorias\categoria;
 use App\Models\Ciudades\ciudad;
+use App\Models\Clientes\Cliente;
+use App\Models\ControlCajas\ControlCaja;
 use App\Models\Departamentos\Departamento;
 use App\Models\Empresas\Empresa;
 use App\Models\Estados\Estado;
@@ -16,7 +19,10 @@ use App\Models\Seguridad\Rol;
 use App\Models\TiposDocumento\tipoDocumento;
 use App\Models\UnidadMedida\UnidadMedida;
 use App\Models\Impuesto\impuesto;
+use App\Models\InventarioCodigoBarras\InventarioCodigoBarra;
 use App\Models\Producto\producto;
+use App\Models\Sucursales\Sucursal;
+use App\Models\Ventas\Venta;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -166,5 +172,70 @@ class User extends Authenticatable
     public function productosActualizados()
     {
         return $this->hasMany(producto::class, 'actualizado_por');
+    }
+
+    public function clientesCreados()
+    {
+        return $this->hasMany(Cliente::class, 'creado_por');
+    }
+
+    public function clientesActualizados()
+    {
+        return $this->hasMany(Cliente::class, 'actualizado_por');
+    }
+
+    public function sucursalesCreadas()
+    {
+        return $this->hasMany(Sucursal::class, 'created_by');
+    }
+
+    public function sucursalesActualizadas()
+    {
+        return $this->hasMany(Sucursal::class, 'updated_by');
+    }
+
+    public function cajasCreadas()
+    {
+        return $this->hasMany(Caja::class, 'created_by');
+    }
+
+    public function cajasActualizadas()
+    {
+        return $this->hasMany(Caja::class, 'updated_by');
+    }
+
+    public function controlCajasApertura()
+    {
+        return $this->hasMany(ControlCaja::class, 'usuario_apertura_id');
+    }
+
+    public function controlCajasCierre()
+    {
+        return $this->hasMany(ControlCaja::class, 'usuario_cierre_id');
+    }
+
+    public function controlCajasCreadas()
+    {
+        return $this->hasMany(ControlCaja::class, 'created_by');
+    }
+
+    public function controlCajasActualizadas()
+    {
+        return $this->hasMany(ControlCaja::class, 'updated_by');
+    }
+
+    public function inventarioCodigosBarrasCreados()
+    {
+        return $this->hasMany(InventarioCodigoBarra::class, 'created_by');
+    }
+
+    public function inventarioCodigosBarrasActualizados()
+    {
+        return $this->hasMany(InventarioCodigoBarra::class, 'updated_by');
+    }
+
+    public function ventasCreadas()
+    {
+        return $this->hasMany(Venta::class, 'usuario_id');
     }
 }

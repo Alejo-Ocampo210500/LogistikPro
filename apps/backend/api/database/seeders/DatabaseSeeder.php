@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             DepartamentosSeeder::class,
             CiudadesSeeder::class,
             ImpuestosSeeder::class,
+            tipoDocumentoSeeder::class,
 
         ]);
     }

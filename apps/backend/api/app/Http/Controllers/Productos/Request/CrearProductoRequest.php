@@ -29,6 +29,7 @@ class CrearProductoRequest extends FormRequest
             'codigo_barras' => 'nullable|string|max:255',
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:2000',
+            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
             'categoria_id' => [
                 'required',
                 'integer',
@@ -66,6 +67,9 @@ class CrearProductoRequest extends FormRequest
     {
         return [
             'codigo.unique' => 'El codigo interno ya esta en uso.',
+            'imagen.image' => 'El archivo de imagen no es valido.',
+            'imagen.mimes' => 'La imagen debe estar en formato JPG, PNG o WEBP.',
+            'imagen.max' => 'La imagen no puede superar los 3MB.',
         ];
     }
 

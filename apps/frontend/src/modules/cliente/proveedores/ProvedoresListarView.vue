@@ -241,12 +241,12 @@
 
                                     <label class="field field-half">
                                         <span>Numero documento</span>
-                                        <input v-model.trim="form.numero_documento" type="text" placeholder="Ej: 900123456" />
+                                        <input v-model.trim="form.numero_documento" type="tel" inputmode="numeric" data-only-numeric="true" placeholder="Ej: 900123456" />
                                     </label>
 
                                     <label class="field field-half">
                                         <span>Codigo verificacion</span>
-                                        <input v-model.trim="form.codigo_verificacion" type="text" placeholder="Ej: 8" />
+                                        <input v-model.trim="form.codigo_verificacion" type="tel" inputmode="numeric" data-only-numeric="true" placeholder="Ej: 8" />
                                     </label>
 
                                     <label class="field field-full">
@@ -287,12 +287,12 @@
 
                                     <label class="field field-half">
                                         <span>Telefono</span>
-                                        <input v-model.trim="form.telefono" type="text" placeholder="Ej: (601) 742 1100" />
+                                        <input v-model.trim="form.telefono" type="tel" inputmode="numeric" data-only-numeric="true" placeholder="Ej: 6017421100" />
                                     </label>
 
                                     <label class="field field-half">
                                         <span>Celular</span>
-                                        <input v-model.trim="form.celular" type="text" placeholder="Ej: 320 610 3344" />
+                                        <input v-model.trim="form.celular" type="tel" inputmode="numeric" data-only-numeric="true" placeholder="Ej: 3206103344" />
                                     </label>
 
                                     <label class="field field-full">
@@ -337,7 +337,7 @@
 
                                     <label class="field field-half">
                                         <span>Codigo postal</span>
-                                        <input v-model.trim="form.codigo_postal" type="text" placeholder="Ej: 110111" />
+                                        <input v-model.trim="form.codigo_postal" type="tel" inputmode="numeric" data-only-numeric="true" placeholder="Ej: 110111" />
                                     </label>
 
                                     <div class="field field-full block-action-row">

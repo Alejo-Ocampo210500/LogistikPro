@@ -2,9 +2,11 @@
 
 namespace App\Models\Ciudades;
 
+use App\Models\Clientes\Cliente;
 use App\Models\Departamentos\Departamento;
 use App\Models\Estados\Estado;
 use App\Models\Provedores\provedor;
+use App\Models\Sucursales\Sucursal;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -42,5 +44,15 @@ class ciudad extends Model
     public function proveedores()
     {
         return $this->hasMany(provedor::class, 'ciudad_id');
+    }
+
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class, 'ciudad_id');
+    }
+
+    public function sucursales()
+    {
+        return $this->hasMany(Sucursal::class, 'ciudad_id');
     }
 }

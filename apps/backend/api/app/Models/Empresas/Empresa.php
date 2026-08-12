@@ -2,17 +2,23 @@
 
 namespace App\Models\Empresas;
 
+use App\Models\Caja\Caja;
 use App\Models\Categorias\categoria;
 use App\Models\Ciudades\ciudad;
+use App\Models\Clientes\Cliente;
+use App\Models\ControlCajas\ControlCaja;
 use App\Models\Departamentos\Departamento;
 use App\Models\Impuesto\impuesto;
+use App\Models\InventarioCodigoBarras\InventarioCodigoBarra;
 use App\Models\Marcas\marca;
 use App\Models\Planes\Plan;
 use App\Models\Producto\producto;
 use App\Models\Provedores\provedor;
+use App\Models\Sucursales\Sucursal;
 use App\Models\Suscripcion;
 use App\Models\UnidadMedida\UnidadMedida;
 use App\Models\User;
+use App\Models\Ventas\Venta;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -105,4 +111,35 @@ class Empresa extends Model
     {
         return $this->hasMany(producto::class);
     }
+
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class);
+    }
+
+    public function sucursales()
+    {
+        return $this->hasMany(Sucursal::class);
+    }
+
+    public function cajas()
+    {
+        return $this->hasMany(Caja::class);
+    }
+
+    public function controlCajas()
+    {
+        return $this->hasMany(ControlCaja::class);
+    }
+
+    public function inventarioCodigosBarras()
+    {
+        return $this->hasMany(InventarioCodigoBarra::class);
+    }
+
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class);
+    }
+
 }

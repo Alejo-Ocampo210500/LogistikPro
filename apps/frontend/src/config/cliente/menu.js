@@ -102,8 +102,8 @@ const clienteMenu = [
     icon: 'mdi-safe-square-outline',
     can: 'caja.view',
     children: [
-      { id: 'caja-apertura', label: 'Apertura', can: 'caja.apertura' },
-      { id: 'caja-cierre', label: 'Cierre', can: 'caja.cierre' },
+      { id: 'caja-cajas', label: 'Crear Cajas', can: 'caja.cajas' },
+      { id: 'caja-control', label: 'Control de Caja', can: 'caja.control' },
       { id: 'caja-arqueo', label: 'Arqueo', can: 'caja.arqueo' },
       { id: 'caja-movimientos', label: 'Movimientos', can: 'caja.movimientos' },
       { id: 'caja-historial', label: 'Historial', can: 'caja.historial' },

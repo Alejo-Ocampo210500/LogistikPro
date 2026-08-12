@@ -2,9 +2,11 @@
 
 namespace App\Models\Paises;
 
+use App\Models\Clientes\Cliente;
 use App\Models\Departamentos\Departamento;
 use App\Models\Estados\Estado;
 use App\Models\Provedores\provedor;
+use App\Models\Sucursales\Sucursal;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,5 +43,15 @@ class Pais extends Model
     public function proveedores()
     {
         return $this->hasMany(provedor::class, 'pais_id');
+    }
+
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class, 'pais_id');
+    }
+
+    public function sucursales()
+    {
+        return $this->hasMany(Sucursal::class, 'pais_id');
     }
 }

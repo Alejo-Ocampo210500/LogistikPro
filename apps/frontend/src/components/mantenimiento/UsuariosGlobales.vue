@@ -81,7 +81,7 @@
                             <div class="dialog-grid">
                                 <v-text-field v-model="form.nombre" label="Nombre" outlined dense required />
                                 <v-text-field v-model="form.apellido" label="Apellido" outlined dense required />
-                                <v-text-field v-model="form.telefono" label="Teléfono" outlined dense />
+                                <v-text-field v-model="form.telefono" label="Teléfono" type="tel" inputmode="numeric" outlined dense />
                                 <v-text-field v-model="form.email" label="Correo electrónico" outlined dense required />
                                 <v-text-field
                                     v-model="form.password"

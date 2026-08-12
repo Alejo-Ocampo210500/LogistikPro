@@ -86,7 +86,7 @@ class PanelProductosClienteController extends Controller
             $payload['empresa_id'] = $empresaId;
             $payload['actualizado_por'] = (int) ($actualizarProductoRequest->user()?->id ?? 0);
 
-            $producto = $this->ProductosRepository->actualizarProductoCliente($productoId, $payload);
+            $producto = $this->ProductosRepository->actualizarProductoCliente($productoId, $empresaId, $payload);
 
             if (!$producto) {
                 return response()->json([

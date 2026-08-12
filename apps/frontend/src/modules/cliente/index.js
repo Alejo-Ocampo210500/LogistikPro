@@ -19,6 +19,12 @@ import ConfiguracionWorkspaceView from '@/modules/cliente/configuracion/Configur
 import InventarioUnidadesView from '@/modules/cliente/inventario/InventarioUnidadesView.vue';
 import ProvedoresListarView from '@/modules/cliente/proveedores/ProvedoresListarView.vue';
 import InventarioProductosView from '@/modules/cliente/inventario/InventarioProductosView.vue';
+import ClientesCrearView from '@/modules/cliente/clientes/ClientesCrearView.vue';
+import EmpresaSucursalesView from '@/modules/cliente/empresa/EmpresaSucursalesView.vue';
+import CajaListarView from '@/modules/cliente/caja/CajaListarView.vue';
+import CajaControlView from '@/modules/cliente/caja/CajaControlView.vue';
+import InventarioCodigosBarrasView from '@/modules/cliente/inventario/InventarioCodigosBarrasView.vue';
+import PostNuevaVentaView from '@/modules/cliente/pos/PostNuevaVentaView.vue';
 
 const prefixRegistry = [
   { prefix: 'dashboard-', component: DashboardWorkspaceView },
@@ -50,6 +56,10 @@ export function resolveClientModuleComponent(moduleId) {
     return InventarioCategroiasView;
   }
 
+  if (moduleId === 'clientes-crear' || moduleId === 'clientes-lista') {
+    return ClientesCrearView;
+  }
+
   if (moduleId === 'inventario-marcas') {
     return InventarioMarcasView;
   }
@@ -64,6 +74,26 @@ export function resolveClientModuleComponent(moduleId) {
 
   if (moduleId === 'inventario-productos'){
     return InventarioProductosView;
+  }
+
+  if(moduleId === 'empresa-sucursales'){
+    return EmpresaSucursalesView;
+  }
+
+  if (moduleId === 'caja-cajas') {
+    return CajaListarView;
+  }
+
+  if(moduleId === 'caja-control'){
+    return CajaControlView;
+  }
+
+  if(moduleId === 'inventario-codigos-barras'){
+    return InventarioCodigosBarrasView;
+  }
+
+  if(moduleId === 'pos-nueva-venta'){
+    return PostNuevaVentaView;
   }
 
   const found = prefixRegistry.find(entry => moduleId.startsWith(entry.prefix));

@@ -2,6 +2,7 @@
 
 namespace App\Models\Pagos;
 
+use App\Models\Ventas\Venta;
 use Illuminate\Database\Eloquent\Model;
 
 class MetodoPago extends Model
@@ -16,5 +17,10 @@ class MetodoPago extends Model
     public function pagos()
     {
         return $this->hasMany(Pago::class);
+    }
+
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class, 'metodo_pago_id');
     }
 }
