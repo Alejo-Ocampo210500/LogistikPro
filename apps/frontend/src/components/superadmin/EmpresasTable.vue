@@ -92,11 +92,21 @@ export default {
 
   methods: {
     getDepartamentoNombre(empresa) {
-      return empresa?.departamento || empresa?.departamento_nombre || empresa?.departamento?.nombre || '-';
+      const departamento = empresa?.departamento;
+      if (departamento && typeof departamento === 'object') {
+        return departamento.nombre || '-';
+      }
+
+      return departamento || empresa?.departamento_nombre || '-';
     },
 
     getCiudadNombre(empresa) {
-      return empresa?.ciudad || empresa?.ciudad_nombre || empresa?.ciudad?.nombre || '-';
+      const ciudad = empresa?.ciudad;
+      if (ciudad && typeof ciudad === 'object') {
+        return ciudad.nombre || '-';
+      }
+
+      return ciudad || empresa?.ciudad_nombre || '-';
     },
 
     formatPlan(value) {

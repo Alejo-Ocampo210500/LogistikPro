@@ -52,6 +52,7 @@
                         <tr>
                             <th>Codigo</th>
                             <th>Codigo barras</th>
+                            <th>Imagen</th>
                             <th>Producto</th>
                             <th>Categoria</th>
                             <th>Marca</th>
@@ -71,6 +72,20 @@
                             </td>
                             <td>
                                 <span class="barcode-pill">{{ item.codigo_barras || 'N/A' }}</span>
+                            </td>
+                            <td>
+                                <div class="thumb-cell">
+                                    <img
+                                        v-if="resolverImagenProducto(item)"
+                                        :src="resolverImagenProducto(item)"
+                                        :alt="item.nombre || 'Imagen producto'"
+                                        class="product-thumb"
+                                        loading="lazy"
+                                    />
+                                    <div v-else class="product-thumb product-thumb--fallback">
+                                        <i class="mdi mdi-image-off-outline"></i>
+                                    </div>
+                                </div>
                             </td>
                             <td>
                                 <strong>{{ item.nombre }}</strong>
@@ -128,7 +143,7 @@
                         </tr>
 
                         <tr v-if="!productosFiltrados.length">
-                            <td colspan="12" class="empty-row">No hay productos para mostrar con los filtros seleccionados.</td>
+                            <td colspan="13" class="empty-row">No hay productos para mostrar con los filtros seleccionados.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -205,6 +220,22 @@
                 <v-divider />
 
                 <v-card-text class="dialog-card-body detail-body">
+                    <section class="detail-image-panel" aria-label="Imagen del producto">
+                        <div class="detail-image-wrap">
+                            <img
+                                v-if="resolverImagenProducto(detalleProducto)"
+                                :src="resolverImagenProducto(detalleProducto)"
+                                :alt="detalleProducto.nombre || 'Imagen del producto'"
+                                class="detail-image"
+                                loading="lazy"
+                            />
+                            <div v-else class="detail-image detail-image--fallback">
+                                <i class="mdi mdi-image-off-outline"></i>
+                                <span>Producto sin imagen</span>
+                            </div>
+                        </div>
+                    </section>
+
                     <section class="detail-kpis" aria-label="Resumen del producto">
                         <article class="detail-kpi detail-kpi-stock">
                             <span>Stock actual</span>
@@ -631,6 +662,10 @@ export default {
             return impuesto ? impuesto.nombre : 'Sin impuesto';
         },
 
+        resolverImagenProducto(item) {
+            return item.imagen_url || item.imagen || '';
+        },
+
         crearBaseProducto() {
             return {
                 codigo: '',
@@ -651,6 +686,8 @@ export default {
                 es_servicio: false,
                 venta_libre: false,
                 estado_id: 1,
+                imagen: null,
+                imagen_url: '',
             };
         },
 
@@ -714,34 +751,49 @@ export default {
             try {
                 await this.esperarTresSegundos();
 
-                const requestPayload = {
-                    codigo: payload.codigo,
-                    codigo_barras: payload.codigo_barras || null,
-                    nombre: payload.nombre,
-                    descripcion: payload.descripcion || null,
-                    categoria_id: payload.categoria_id,
-                    marca_id: payload.marca_id || null,
-                    unidad_medida_id: payload.unidad_medida_id,
-                    impuesto_id: payload.impuesto_id || null,
-                    costo: Number(payload.costo) || 0,
-                    precio_venta: Number(payload.precio_venta) || 0,
-                    stock: Number(payload.stock) || 0,
-                    stock_minimo: Number(payload.stock_minimo) || 0,
-                    stock_maximo: payload.stock_maximo === '' || payload.stock_maximo === null
-                        ? null
-                        : Number(payload.stock_maximo),
-                    maneja_inventario: Boolean(payload.maneja_inventario),
-                    permite_descuento: Boolean(payload.permite_descuento),
-                    es_servicio: Boolean(payload.es_servicio),
-                    venta_libre: Boolean(payload.venta_libre),
-                    estado_id: payload.estado_id,
-                };
+                const requestPayload = new FormData();
+                requestPayload.append('codigo', payload.codigo || '');
+                requestPayload.append('codigo_barras', payload.codigo_barras || '');
+                requestPayload.append('nombre', payload.nombre || '');
+                requestPayload.append('descripcion', payload.descripcion || '');
+                requestPayload.append('categoria_id', String(payload.categoria_id || ''));
+                requestPayload.append('marca_id', payload.marca_id ? String(payload.marca_id) : '');
+                requestPayload.append('unidad_medida_id', String(payload.unidad_medida_id || ''));
+                requestPayload.append('impuesto_id', payload.impuesto_id ? String(payload.impuesto_id) : '');
+                requestPayload.append('costo', String(Number(payload.costo) || 0));
+                requestPayload.append('precio_venta', String(Number(payload.precio_venta) || 0));
+                requestPayload.append('stock', String(Number(payload.stock) || 0));
+                requestPayload.append('stock_minimo', String(Number(payload.stock_minimo) || 0));
+                requestPayload.append(
+                    'stock_maximo',
+                    payload.stock_maximo === '' || payload.stock_maximo === null
+                        ? ''
+                        : String(Number(payload.stock_maximo) || 0)
+                );
+                requestPayload.append('maneja_inventario', payload.maneja_inventario ? '1' : '0');
+                requestPayload.append('permite_descuento', payload.permite_descuento ? '1' : '0');
+                requestPayload.append('es_servicio', payload.es_servicio ? '1' : '0');
+                requestPayload.append('venta_libre', payload.venta_libre ? '1' : '0');
+                requestPayload.append('estado_id', String(payload.estado_id || 1));
+
+                if (payload.imagen instanceof File) {
+                    requestPayload.append('imagen', payload.imagen);
+                }
 
                 if (this.editMode && this.editingId) {
-                    await api.put(`/productos/${this.editingId}/actualizar`, requestPayload);
+                    requestPayload.append('_method', 'PUT');
+                    await api.post(`/productos/${this.editingId}/actualizar`, requestPayload, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
                     await this.listarProductos();
                 } else {
-                    await api.post('/productos/crear', requestPayload);
+                    await api.post('/productos/crear', requestPayload, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
                     await this.listarProductos();
                 }
 
@@ -1093,6 +1145,26 @@ td small {
     color: #186843;
 }
 
+.thumb-cell {
+    width: 48px;
+}
+
+.product-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid rgba(23, 48, 79, 0.12);
+    display: block;
+}
+
+.product-thumb--fallback {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #ecf3fc 0%, #fff3d8 100%);
+    color: rgba(23, 48, 79, 0.6);
+}
+
 .stock-cell {
     display: inline-flex;
     align-items: center;
@@ -1333,6 +1405,42 @@ td small {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+.detail-image-panel {
+    border-radius: 16px;
+    border: 1px solid rgba(23, 48, 79, 0.1);
+    background: rgba(255, 255, 255, 0.96);
+    padding: 12px;
+}
+
+.detail-image-wrap {
+    max-width: 260px;
+}
+
+.detail-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(23, 48, 79, 0.12);
+    display: block;
+}
+
+.detail-image--fallback {
+    background: linear-gradient(135deg, #ecf3fc 0%, #fff3d8 100%);
+    color: rgba(23, 48, 79, 0.64);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.detail-image--fallback i {
+    font-size: 1.5rem;
 }
 
 .detail-kpis {

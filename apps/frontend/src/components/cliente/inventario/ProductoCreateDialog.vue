@@ -51,6 +51,17 @@
                         <textarea v-model.trim="localForm.descripcion" rows="3" placeholder="Descripcion corta del producto"></textarea>
                     </label>
 
+                    <div class="field field-full image-field">
+                        <span>Imagen del producto</span>
+                        <div class="image-field__controls">
+                            <input type="file" accept="image/png,image/jpeg,image/webp" @change="onImagenChange" />
+                            <small>Formatos: JPG, PNG o WEBP (max 3MB)</small>
+                        </div>
+                        <div v-if="localForm.imagen_preview" class="image-preview-wrap">
+                            <img :src="localForm.imagen_preview" alt="Previsualizacion de imagen" class="image-preview" />
+                        </div>
+                    </div>
+
                     <label class="field field-quarter">
                         <span>Categoria</span>
                         <select v-model.number="localForm.categoria_id">
@@ -258,7 +269,20 @@ export default {
                 es_servicio: Boolean(base.es_servicio ?? false),
                 venta_libre: Boolean(base.venta_libre ?? false),
                 estado_id: Number(base.estado_id) || 1,
+                imagen: null,
+                imagen_preview: base.imagen_url || base.imagen || '',
             };
+        },
+
+        onImagenChange(event) {
+            const file = event?.target?.files?.[0] || null;
+            this.localForm.imagen = file;
+
+            if (!file) {
+                return;
+            }
+
+            this.localForm.imagen_preview = URL.createObjectURL(file);
         },
 
         emitirGuardar() {
@@ -269,6 +293,7 @@ export default {
                 stock: Number(this.localForm.stock) || 0,
                 stock_minimo: Number(this.localForm.stock_minimo) || 0,
                 stock_maximo: Number(this.localForm.stock_maximo) || 0,
+                imagen: this.localForm.imagen || null,
             };
 
             this.$emit('save', payload);
@@ -377,6 +402,45 @@ export default {
 .field textarea {
     resize: vertical;
     min-height: 82px;
+}
+
+.image-field {
+    border: 1px dashed rgba(23, 48, 79, 0.18);
+    border-radius: 12px;
+    padding: 12px;
+    background: rgba(247, 250, 255, 0.72);
+}
+
+.image-field__controls {
+    display: grid;
+    gap: 6px;
+}
+
+.image-field__controls input[type='file'] {
+    border: 1px solid rgba(23, 48, 79, 0.22);
+    border-radius: 10px;
+    padding: 8px 10px;
+    background: #ffffff;
+}
+
+.image-field__controls small {
+    color: rgba(23, 48, 79, 0.62);
+    font-size: 0.76rem;
+}
+
+.image-preview-wrap {
+    margin-top: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(23, 48, 79, 0.12);
+    max-width: 220px;
+}
+
+.image-preview {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
 }
 
 .rules-wrap {

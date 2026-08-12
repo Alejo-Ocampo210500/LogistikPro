@@ -523,9 +523,10 @@ export default {
 
 <style scoped>
 .client-page {
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
   grid-template-columns: 304px minmax(0, 1fr);
+  overflow: hidden;
   background:
     radial-gradient(circle at top left, rgba(60, 121, 255, 0.14), transparent 24%),
     linear-gradient(180deg, #eef3fb 0%, #e8eef7 100%);
@@ -533,7 +534,7 @@ export default {
 }
 
 .client-sidebar {
-  min-height: 100vh;
+  min-height: 0;
   height: 100vh;
   position: sticky;
   top: 0;
@@ -839,15 +840,17 @@ export default {
 }
 
 .client-content {
-  padding: 28px;
-  min-height: 100vh;
+  padding: 0 28px 28px;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .client-topbar {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin: -28px -28px 0;
+  margin: 0 -28px 0;
   position: sticky;
   top: 0;
   z-index: 30;
@@ -1208,11 +1211,11 @@ button:active {
 
 @media (max-width: 640px) {
   .client-content {
-    padding: 18px;
+    padding: 0 18px 18px;
   }
 
   .client-topbar {
-    margin: -18px -18px 0;
+    margin: 0 -18px 0;
   }
 
   .topbar-inline {

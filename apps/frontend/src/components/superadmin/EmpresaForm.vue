@@ -27,12 +27,12 @@
       <div class="grid grid-2">
         <label class="field">
           <span>NIT</span>
-          <input v-model.trim="form.nit" type="text" placeholder="900000123" />
+          <input v-model.trim="form.nit" type="tel" inputmode="numeric" data-only-numeric="true" placeholder="900000123" />
         </label>
 
         <label class="field">
           <span>Teléfono</span>
-          <input v-model.trim="form.telefono" type="text" placeholder="3000000000" />
+          <input v-model.trim="form.telefono" type="tel" inputmode="numeric" data-only-numeric="true" placeholder="3000000000" />
         </label>
       </div>
 
@@ -114,7 +114,7 @@
 
         <label class="field">
           <span>Teléfono del administrador</span>
-          <input v-model.trim="form.admin_telefono" type="text" placeholder="3000000000" />
+          <input v-model.trim="form.admin_telefono" type="tel" inputmode="numeric" data-only-numeric="true" placeholder="3000000000" />
         </label>
       </div>
 
