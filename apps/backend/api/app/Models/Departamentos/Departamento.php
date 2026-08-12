@@ -3,9 +3,11 @@
 namespace App\Models\Departamentos;
 
 use App\Models\Ciudades\ciudad;
+use App\Models\Clientes\Cliente;
 use App\Models\Estados\Estado;
 use App\Models\Paises\Pais;
 use App\Models\Provedores\provedor;
+use App\Models\Sucursales\Sucursal;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -44,5 +46,15 @@ class Departamento extends Model
     public function proveedores()
     {
         return $this->hasMany(provedor::class, 'departamento_id');
+    }
+
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class, 'departamento_id');
+    }
+
+    public function sucursales()
+    {
+        return $this->hasMany(Sucursal::class, 'departamento_id');
     }
 }

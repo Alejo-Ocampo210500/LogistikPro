@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Cajas\PanelCajasClienteController;
 use App\Http\Controllers\CategoriasCliente\PanelCategoriasClienteController;
 use App\Http\Controllers\Ciudades\PanelCiudadesClienteController;
+use App\Http\Controllers\Clientes\PanelClientesClienteController;
+use App\Http\Controllers\ControlCajas\PanelControlCajasController;
 use App\Http\Controllers\Departamentos\PanelDepartamentosClienteController;
 use App\Http\Middleware\EnsureCliente;
 use App\Http\Controllers\Planes\PlanesController;
@@ -16,6 +19,7 @@ use App\Http\Controllers\Pagos\PanelPagosEmpresaController;
 use App\Http\Controllers\Paises\PanelPaisesClienteController;
 use App\Http\Controllers\Productos\PanelProductosClienteController;
 use App\Http\Controllers\Provedores\PanelProvedoresClienteController;
+use App\Http\Controllers\Sucursales\PanelSucursalesClienteController;
 use App\Http\Controllers\Suscripciones\PanelSuscripcionesController;
 use App\Http\Controllers\TipoDocumento\PanelTipoDocumentoClienteController;
 use App\Http\Controllers\UnidadesMedida\PanelUnidadMedidaController;
@@ -79,7 +83,7 @@ Route::post('suscripciones/registrar-pago-manual', [PanelPagosEmpresaController:
     ->middleware(['auth:sanctum', 'superadmin']);
 
 Route::get('/metodos-pago/listar', [PanelMetodosPagoController::class, 'listarMetodosPago'])
-    ->middleware(['auth:sanctum', 'superadmin']);
+    ->middleware(['auth:sanctum']);
 
 Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
     Route::get('/categorias', [PanelCategoriasClienteController::class, 'obtenerCategoriasCliente']);
@@ -142,4 +146,32 @@ Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
     Route::post('/productos/crear', [PanelProductosClienteController::class, 'crearProductoCliente']);
     Route::put('/productos/{productoId}/actualizar', [PanelProductosClienteController::class, 'actualizarProductoCliente']);
     Route::post('/productos/{productoId}/cambiarEstado', [PanelProductosClienteController::class, 'cambiarEstadoProductoCliente']);
+});
+
+Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
+    Route::get('/clientes', [PanelClientesClienteController::class, 'obtenerClientesCliente']);
+    Route::post('/clientes/crear', [PanelClientesClienteController::class, 'crearClienteCliente']);
+    Route::put('/clientes/{clienteId}/actualizar', [PanelClientesClienteController::class, 'actualizarClienteCliente']);
+    Route::post('/clientes/{clienteId}/cambiarEstado', [PanelClientesClienteController::class, 'cambiarEstadoClienteCliente']);
+});
+
+Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
+    Route::get('/sucursales', [PanelSucursalesClienteController::class, 'obtenerSucursalesCliente']);
+    Route::post('/sucursales/crear', [PanelSucursalesClienteController::class, 'crearSucursalCliente']);
+    Route::put('/sucursales/{sucursalId}/actualizar', [PanelSucursalesClienteController::class, 'actualizarSucursalCliente']);
+    Route::post('/sucursales/{sucursalId}/cambiarEstado', [PanelSucursalesClienteController::class, 'cambiarEstadoSucursalCliente']);
+});
+
+Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
+    Route::get('/cajas', [PanelCajasClienteController::class, 'obtenerCajasCliente']);
+    Route::post('/cajas/crear', [PanelCajasClienteController::class, 'crearCajaCliente']);
+    Route::put('/cajas/{cajaId}/actualizar', [PanelCajasClienteController::class, 'actualizarCajaCliente']);
+    Route::post('/cajas/{cajaId}/cambiarEstado', [PanelCajasClienteController::class, 'cambiarEstadoCajaCliente']);
+});
+
+Route::middleware(['auth:sanctum', EnsureCliente::class])->group(function () {
+    Route::get('/control-cajas', [PanelControlCajasController::class, 'obtenerControlCajasCliente']);
+    Route::post('/control-cajas/abrir', [PanelControlCajasController::class, 'abrirControlCajaCliente']);
+    Route::put('/control-cajas/{controlCajaId}/cerrar', [PanelControlCajasController::class, 'cerrarControlCajaCliente']);
+    Route::post('/control-cajas/{controlCajaId}/anular', [PanelControlCajasController::class, 'anularControlCajaCliente']);
 });

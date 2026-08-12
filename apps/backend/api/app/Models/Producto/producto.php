@@ -2,16 +2,15 @@
 
 namespace App\Models\Producto;
 
-use App\Models\Categorias\categoria;
 use App\Models\Empresas\Empresa;
 use App\Models\Estados\Estado;
-use App\Models\Impuesto\impuesto;
-use App\Models\Marcas\marca;
+use App\Models\InventarioCodigoBarras\InventarioCodigoBarra;
 use App\Models\UnidadMedida\UnidadMedida;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class producto extends Model
 {
@@ -25,6 +24,7 @@ class producto extends Model
         'codigo_barras',
         'nombre',
         'descripcion',
+        'imagen',
         'categoria_id',
         'marca_id',
         'unidad_medida_id',
@@ -43,6 +43,10 @@ class producto extends Model
         'actualizado_por'
     ];
 
+    protected $appends = [
+        'imagen_url',
+    ];
+
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'empresa_id');
@@ -50,12 +54,12 @@ class producto extends Model
 
     public function categoria()
     {
-        return $this->belongsTo(categoria::class, 'categoria_id');
+        return $this->belongsTo(\App\Models\Categorias\categoria::class, 'categoria_id');
     }
 
     public function marca()
     {
-        return $this->belongsTo(marca::class, 'marca_id');
+        return $this->belongsTo(\App\Models\Marcas\marca::class, 'marca_id');
     }
 
     public function unidadMedida()
@@ -65,7 +69,7 @@ class producto extends Model
 
     public function impuesto()
     {
-        return $this->belongsTo(impuesto::class, 'impuesto_id');
+        return $this->belongsTo(\App\Models\Impuesto\impuesto::class, 'impuesto_id');
     }
 
     public function estado()
@@ -81,5 +85,23 @@ class producto extends Model
     public function actualizadoPor()
     {
         return $this->belongsTo(User::class, 'actualizado_por');
+    }
+
+    public function inventarioCodigosBarras()
+    {
+        return $this->hasMany(InventarioCodigoBarra::class, 'producto_id');
+    }
+
+    public function getImagenUrlAttribute(): ?string
+    {
+        if (!$this->imagen) {
+            return null;
+        }
+
+        if (str_starts_with($this->imagen, 'http://') || str_starts_with($this->imagen, 'https://')) {
+            return $this->imagen;
+        }
+
+        return url(Storage::url($this->imagen));
     }
 }

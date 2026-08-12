@@ -2,8 +2,10 @@
 
 namespace App\Models\Estados;
 
+use App\Models\Caja\Caja;
 use App\Models\Categorias\categoria;
 use App\Models\Ciudades\ciudad;
+use App\Models\Clientes\Cliente;
 use App\Models\Departamentos\Departamento;
 use App\Models\Impuesto\impuesto;
 use App\Models\Marcas\marca;
@@ -98,5 +100,15 @@ class Estado extends Model
     public function productos()
     {
         return $this->hasMany(producto::class, 'estado_id');
+    }
+
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class, 'estado_id');
+    }
+
+    public function caja()
+    {
+        return $this->hasMany(Caja::class, 'estado_id');
     }
 }

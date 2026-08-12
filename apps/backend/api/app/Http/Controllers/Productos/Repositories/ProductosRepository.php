@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Productos\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Producto\producto as ProductoModel;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ProductosRepository
 {
@@ -17,12 +19,15 @@ class ProductosRepository
 
     public function crearProductoCliente(array $payload): ProductoModel
     {
+        $imagenPath = $this->persistirImagen($payload['imagen'] ?? null);
+
         return ProductoModel::query()->create([
             'empresa_id' => $payload['empresa_id'],
             'codigo' => $payload['codigo'],
             'codigo_barras' => $payload['codigo_barras'] ?? null,
             'nombre' => $payload['nombre'],
             'descripcion' => $payload['descripcion'] ?? null,
+            'imagen' => $imagenPath,
             'categoria_id' => $payload['categoria_id'],
             'marca_id' => $payload['marca_id'] ?? null,
             'unidad_medida_id' => $payload['unidad_medida_id'],
@@ -42,19 +47,28 @@ class ProductosRepository
         ]);
     }
 
-    public function actualizarProductoCliente(int $productoId, array $payload): bool
+    public function actualizarProductoCliente(int $productoId, int $empresaId, array $payload): ?ProductoModel
     {
-        $producto = ProductoModel::query()->find($productoId);
+        $producto = ProductoModel::query()
+            ->where('id', $productoId)
+            ->where('empresa_id', $empresaId)
+            ->first();
 
         if (!$producto) {
-            return false;
+            return null;
         }
 
-        return $producto->update([
+        $imagenPath = $producto->imagen;
+        if (isset($payload['imagen']) && $payload['imagen'] instanceof UploadedFile) {
+            $imagenPath = $this->persistirImagen($payload['imagen'], $producto->imagen);
+        }
+
+        $producto->update([
             'codigo' => $payload['codigo'],
             'codigo_barras' => $payload['codigo_barras'] ?? null,
             'nombre' => $payload['nombre'],
             'descripcion' => $payload['descripcion'] ?? null,
+            'imagen' => $imagenPath,
             'categoria_id' => $payload['categoria_id'],
             'marca_id' => $payload['marca_id'] ?? null,
             'unidad_medida_id' => $payload['unidad_medida_id'],
@@ -71,6 +85,8 @@ class ProductosRepository
             'estado_id' => $payload['estado_id'],
             'actualizado_por' => $payload['actualizado_por'] ?? null,
         ]);
+
+        return $producto->fresh();
     }
 
     public function cambiarEstadoProductoCliente(int $productoId, int $empresaId): bool
@@ -89,5 +105,18 @@ class ProductosRepository
         return $producto->update([
             'estado_id' => $nuevoEstadoId,
         ]);
+    }
+
+    protected function persistirImagen(?UploadedFile $imagen, ?string $rutaActual = null): ?string
+    {
+        if (!$imagen) {
+            return $rutaActual;
+        }
+
+        if ($rutaActual && Storage::disk('public')->exists($rutaActual)) {
+            Storage::disk('public')->delete($rutaActual);
+        }
+
+        return $imagen->store('productos', 'public');
     }
 }

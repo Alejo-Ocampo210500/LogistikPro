@@ -2,6 +2,7 @@
 
 namespace App\Models\TiposDocumento;
 
+use App\Models\Clientes\Cliente;
 use App\Models\Estados\Estado;
 use App\Models\Provedores\provedor;
 use App\Models\User;
@@ -42,5 +43,10 @@ class tipoDocumento extends Model
     public function proveedores()
     {
         return $this->hasMany(provedor::class, 'tipo_documento_id');
+    }
+
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class, 'tipo_documento_id');
     }
 }
