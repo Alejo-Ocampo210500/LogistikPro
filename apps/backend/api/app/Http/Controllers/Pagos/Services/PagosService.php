@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Pagos\Services;
 
+use App\Http\Controllers\Notificaciones\Services\NotificacionesSistemaService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class PagosService
 {
+    public function __construct(protected NotificacionesSistemaService $notificacionesService) {}
+
     private ?bool $pagosTieneSnapshot = null;
 
     private function obtenerEstadoActivoId(): ?int
@@ -156,7 +160,7 @@ class PagosService
 
     public function confirmarPagoPlanes($data)
     {
-        $suscripcion = DB::transaction(function () use ($data) {
+        $pagoDetallado = DB::transaction(function () use ($data) {
             $pago = DB::table('pagos')
                 ->where('id', $data['pago_id'])
                 ->first();
@@ -200,12 +204,24 @@ class PagosService
                     'updated_at' => now(),
                 ]);
 
-            return $pago;
+            return $this->obtenerPagoDetalladoPorId((int) $pago->id);
         });
+
+        if ($pagoDetallado) {
+            $this->notificacionesService->registrarEvento('pago_realizado', [
+                'empresa_id' => $pagoDetallado->empresa_id,
+                'empresa_nombre' => $pagoDetallado->empresa_nombre,
+                'usuario_actor_id' => Auth::id(),
+                'valor' => number_format((float) $pagoDetallado->valor, 0, ',', '.'),
+                'referencia' => $pagoDetallado->referencia ?? 'N/A',
+                'destino_modulo' => 'empresas-pagos',
+                'destino_id' => (string) $pagoDetallado->id,
+            ]);
+        }
 
         return [
             'message' => 'Pago confirmado exitosamente',
-            'data' => $suscripcion
+            'data' => $pagoDetallado
         ];
     }
 
@@ -290,6 +306,18 @@ class PagosService
 
             return $this->obtenerPagoDetalladoPorId((int) $pagoId);
         });
+
+        if ($pagoDetallado) {
+            $this->notificacionesService->registrarEvento('pago_realizado', [
+                'empresa_id' => $pagoDetallado->empresa_id,
+                'empresa_nombre' => $pagoDetallado->empresa_nombre,
+                'usuario_actor_id' => Auth::id(),
+                'valor' => number_format((float) $pagoDetallado->valor, 0, ',', '.'),
+                'referencia' => $pagoDetallado->referencia ?? 'N/A',
+                'destino_modulo' => 'empresas-pagos',
+                'destino_id' => (string) $pagoDetallado->id,
+            ]);
+        }
 
         return [
             'message' => 'Pago manual registrado exitosamente',

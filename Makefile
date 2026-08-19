@@ -30,4 +30,4 @@ dev-back:
 	set -a; . ./env/api.env; set +a; cd apps/backend/api && DB_HOST=127.0.0.1 php artisan serve
 
 dev-front:
-	set -a; . ./env/frontend.env; set +a; npm --prefix apps/frontend run serve
+	set -a; . ./env/frontend.env; set +a; npm --prefix apps/frontend run dev

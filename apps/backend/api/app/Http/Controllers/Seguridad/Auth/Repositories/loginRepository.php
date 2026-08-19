@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Seguridad\Auth\Repositories;
 
+use App\Models\Suscripcion;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 
 class loginRepository
 {
-    public function __construct(protected User $userModel) {}
+    public function __construct(
+        protected User $userModel,
+        protected Suscripcion $suscripcionModel
+    ) {}
 
     public function login(array $data)
     {
@@ -40,6 +44,17 @@ class loginRepository
         $usuario->update([
             'ultimo_acceso' => now()
         ]);
+
+        $suscripcionActual = $this->suscripcionModel
+            ->newQuery()
+            ->where('empresa_id', $usuario->empresa_id)
+            ->orderByDesc('id')
+            ->first();
+
+        if ($suscripcionActual && $usuario->empresa) {
+            $usuario->empresa->setAttribute('suscripcion_actual', $suscripcionActual);
+            $usuario->empresa->setAttribute('fecha_vencimiento', $suscripcionActual->fecha_vencimiento);
+        }
 
         return [
             'token' => $token,

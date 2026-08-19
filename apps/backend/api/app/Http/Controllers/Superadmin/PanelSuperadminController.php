@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Notificaciones\Services\NotificacionesSistemaService;
 use App\Http\Requests\Superadmin\StoreEmpresaRequest;
 use App\Http\Requests\Superadmin\UpdateEmpresaRequest;
 use App\Models\Departamentos\Departamento;
@@ -13,10 +14,14 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PanelSuperadminController extends Controller
 {
-    public function __construct(protected SuperadminService $superadminService) {}
+    public function __construct(
+        protected SuperadminService $superadminService,
+        protected NotificacionesSistemaService $notificacionesService
+    ) {}
     public function index(): JsonResponse
     {
         $activo = \App\Models\Estados\Estado::where('nombre', 'Activo')->first();
@@ -144,6 +149,27 @@ class PanelSuperadminController extends Controller
 
             return $empresa;
         });
+
+        $usuarioInicial = $empresa->getRelation('usuario_inicial');
+
+        $this->notificacionesService->registrarEvento('empresa_registrada', [
+            'empresa_id' => $empresa->id,
+            'empresa_nombre' => $empresa->nombre_comercial,
+            'usuario_actor_id' => Auth::id(),
+            'destino_modulo' => 'empresas-listado',
+            'destino_id' => (string) $empresa->id,
+        ]);
+
+        if ($usuarioInicial) {
+            $this->notificacionesService->registrarEvento('usuario_creado', [
+                'empresa_id' => $empresa->id,
+                'empresa_nombre' => $empresa->nombre_comercial,
+                'usuario_actor_id' => Auth::id(),
+                'usuario_nombre' => trim(($usuarioInicial->nombre ?? '') . ' ' . ($usuarioInicial->apellido ?? '')),
+                'destino_modulo' => 'usuarios-globales',
+                'destino_id' => (string) $usuarioInicial->id,
+            ]);
+        }
 
         return response()->json([
             'mensaje' => 'Empresa creada correctamente.',
@@ -306,6 +332,15 @@ class PanelSuperadminController extends Controller
 
         $usuario->update([
             'password' => $request->input('password')
+        ]);
+
+        $this->notificacionesService->registrarEvento('accion_administrativa', [
+            'empresa_id' => $empresa->id,
+            'empresa_nombre' => $empresa->nombre_comercial,
+            'usuario_actor_id' => Auth::id(),
+            'mensaje' => 'Se actualizo la contrasena del administrador de la empresa ' . $empresa->nombre_comercial . '.',
+            'destino_modulo' => 'usuarios-globales',
+            'destino_id' => (string) $usuario->id,
         ]);
 
         return response()->json([
