@@ -15,6 +15,7 @@ use App\Http\Controllers\Impuesto\PanelImpuestosClienteController;
 use App\Http\Controllers\Mantenimiento\PanelMantenimientoController;
 use App\Http\Controllers\Marcas\PanelMarcasClienteController;
 use App\Http\Controllers\MetodosPago\PanelMetodosPagoController;
+use App\Http\Controllers\Notificaciones\PanelNotificacionesSistemaController;
 use App\Http\Controllers\Pagos\PanelPagosEmpresaController;
 use App\Http\Controllers\Paises\PanelPaisesClienteController;
 use App\Http\Controllers\Productos\PanelProductosClienteController;
@@ -56,6 +57,18 @@ Route::put('/superadmin/empresas/{empresa}/cambiar-password', [PanelSuperadminCo
     ->middleware(['auth:sanctum', 'superadmin']);
 
 Route::get('/superadmin/usuarios', [PanelSuperadminController::class, 'obtenerUsuarios'])
+    ->middleware(['auth:sanctum', 'superadmin']);
+
+Route::get('/superadmin/notificaciones-sistema', [PanelNotificacionesSistemaController::class, 'listar'])
+    ->middleware(['auth:sanctum', 'superadmin']);
+
+Route::post('/superadmin/notificaciones-sistema', [PanelNotificacionesSistemaController::class, 'crear'])
+    ->middleware(['auth:sanctum', 'superadmin']);
+
+Route::put('/superadmin/notificaciones-sistema/marcar-todas', [PanelNotificacionesSistemaController::class, 'marcarTodasLeidas'])
+    ->middleware(['auth:sanctum', 'superadmin']);
+
+Route::put('/superadmin/notificaciones-sistema/{notificacionId}/marcar-leida', [PanelNotificacionesSistemaController::class, 'marcarLeida'])
     ->middleware(['auth:sanctum', 'superadmin']);
 
 Route::put('mantenimiento/editar-usuarios-globales/{usuario}', [PanelMantenimientoController::class, 'actualizarUsuarioGlobal'])
