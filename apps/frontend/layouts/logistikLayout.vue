@@ -1,4 +1,5 @@
-<!-- layouts/blank.vue -->
+<!-- layouts/logistikLayout.vue -->
+
 <template>
   <v-app dark class="logistik-app">
     <v-main>
@@ -9,19 +10,12 @@
 
 <script>
 export default {
-  name: 'BlankLayout'
+  name: 'LogistikLayout'
 }
 </script>
 
 <style>
-html,
-body,
-#__nuxt,
-#__layout,
-.v-application,
-.v-application--wrap,
-.v-main,
-.v-main__wrap {
+.logistik-app {
   background: #07162d !important;
 }
 </style>
