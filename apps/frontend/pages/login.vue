@@ -1,19 +1,19 @@
 <template>
-  <div>
-    <!-- TU LOGIN -->
-  </div>
+    <div>
+        
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'LoginPage',
+    name: 'LoginPage',
 
-  layout: 'logistikLayout',
+    layout: 'LoginLayout',
 
-  data() {
-    return {
+    data() {
+        return {
 
+        }
     }
-  }
 }
 </script>
