@@ -1,15 +1,3 @@
-Login 
-
-PASSPORT  backend 
-
-rutas de logueo y cierre de sesion 
-
-Token de passport al iniciar sesion tiene que guardar en session storage , crear middleware llamado auth.js para validar el session storage 
-
-al loguear ir a una pagina que se llame /logistikPro que debe estar creada en pages dentro de una carpeta logistik 
-
-
-
 <template>
    <v-app dark class="logistik-app">
        <v-navigation-drawer v-model="drawer" app :permanent="$vuetify.breakpoint.mdAndUp"
@@ -45,7 +33,6 @@ import Footer from '../components/footer.vue';
 import Sidebar from '../components/Sidebar.vue';
 export default {
    name: 'LogistikLayout',
-
 
    components: {
        Sidebar,
@@ -174,4 +161,3 @@ export default {
    white-space: nowrap;
 }
 </style>
-
