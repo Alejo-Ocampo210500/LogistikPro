@@ -14,7 +14,7 @@
                     </v-btn>
 
                     <v-btn color="accent" dark rounded class="ml-4 px-6" href="/login">
-                        Iniciar sesión
+                        Iniciar sesiónsss
                     </v-btn>
                 </div>
 

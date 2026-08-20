@@ -3,9 +3,7 @@
 </template><script>
 export default {
   name: 'LoginPage',
-
   layout: 'LoginLayout',
-
   data() {
     return {
 
