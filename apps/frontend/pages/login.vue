@@ -4,7 +4,7 @@
 export default {
   name: 'LoginPage',
 
-  layout: 'logistikLayout',
+  layout: 'LoginLayout',
 
   data() {
     return {
