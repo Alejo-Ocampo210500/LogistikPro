@@ -1,104 +1,37 @@
 <template>
   <div class="landing-page">
-    <v-container id="inicio" class="py-8 py-md-12">
-      <v-row align="center" justify="space-between" class="py-2 py-md-8">
-        <v-col cols="12" md="6" class="pr-md-10 text-center text-md-left">
-          <v-chip color="accent" dark label small class="mb-6">
-            GESTIÓN EMPRESARIAL INTELIGENTE
-          </v-chip>
+    <section id="inicio" class="hero-banner-section">
+      <v-container class="pt-8 pt-md-10 pb-0">
+        <v-sheet rounded="xl" outlined color="#091A35" class="hero-banner-shell">
+          <v-img src="/branding/banner_principal.png" class="hero-banner-image" height="620" position="center center" />
+        </v-sheet>
+      </v-container>
 
-          <h1 class="landing-title font-weight-bold mb-5">
-            Gestiona tu negocio. Impulsa tu crecimiento.
-          </h1>
+      <v-container class="py-8 py-md-10">
+        <v-row justify="center">
+          <v-col cols="12" md="10" lg="8" class="text-center">
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
 
-          <p class="text-body-1 text-md-h6 font-weight-regular mb-8">
-            LogistikPro integra ventas, inventario, clientes, facturación y administración en una sola plataforma,
-            diseñada para ayudarte a controlar tu negocio de forma simple, rápida y eficiente.
-          </p>
-
-          <v-row class="mb-8" dense align="stretch">
-            <v-col v-for="point in heroPoints" :key="point.title" cols="12" sm="6" lg="3">
-              <v-sheet color="#0B1D3A" rounded="xl" class="pa-4 hero-point-card d-flex flex-column">
-                <v-icon :color="point.color" class="mb-2" size="28">
-                  {{ point.icon }}
-                </v-icon>
-                <div class="text-subtitle-2 font-weight-bold mb-1 hero-point-title">
-                  {{ point.title }}
-                </div>
-                <div class="text-caption font-weight-medium mb-1 hero-point-subtitle">
-                  {{ point.subtitle }}
-                </div>
-                <div class="text-body-2 hero-point-text">
-                  {{ point.text }}
-                </div>
-              </v-sheet>
-            </v-col>
-          </v-row>
-
-          <div class="d-flex flex-column flex-sm-row justify-center justify-md-start align-center">
-            <v-btn color="accent" dark x-large rounded class="mr-sm-4 mb-4" href="#contacto">
-              Solicitar demo
-            </v-btn>
-
-            <v-btn outlined x-large rounded class="mb-4" href="#plataforma">
-              Ver Planes
-            </v-btn>
-          </div>
-        </v-col>
-
-        <v-col cols="12" md="6">
-          <v-card color="#091A35" rounded="xl" outlined class="pa-4 pa-md-6">
-            <v-row align="center" class="mb-4">
-              <v-col cols="auto">
-                <v-avatar size="72" tile>
-                  <v-img src="/branding/isotipo-logistikpro.png" contain />
-                </v-avatar>
-              </v-col>
-
-              <v-col>
-                <div class="text-overline accent--text">
-                  NUESTRA PLATAFORMA
-                </div>
-                <div class="text-h5 font-weight-bold">
-                  LOGISTIKPRO
-                </div>
-              </v-col>
-            </v-row>
-
-            <v-sheet color="#0D2347" rounded="lg" class="pa-5 mb-4">
-              <v-row align="center">
-                <v-col cols="12" sm="7">
-                  <div class="text-subtitle-1 font-weight-medium mb-2">
-                    Diseño pensado para presentar el producto
-                  </div>
-                  <div class="text-body-2">
-                    La home se enfoca en comunicar el valor de la suite sin saturar, con jerarquías limpias y rutas
-                    claras hacia cada subdominio.
-                  </div>
-                </v-col>
-
-                <v-col cols="12" sm="5">
-                  <v-img src="/branding/logo-logistikpro.png" contain max-height="150" />
-                </v-col>
-              </v-row>
-            </v-sheet>
-
-            <v-row>
-              <v-col v-for="card in heroCards" :key="card.title" cols="12" sm="4">
-                <v-card rounded="lg" color="#0B1D3A" outlined class="pa-4 fill-height">
-                  <v-icon :color="card.color" class="mb-3">
-                    {{ card.icon }}
-                  </v-icon>
-                  <div class="text-subtitle-1 font-weight-medium mb-2">
-                    {{ card.title }}
-                  </div>
-                  <div class="text-body-2">
-                    {{ card.text }}
-                  </div>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-card>
+    <v-container class="py-8 py-md-10 hero-strip-container">
+      <v-row dense class="hero-strip-row">
+        <v-col v-for="point in heroPoints" :key="point.title" cols="12" sm="6" md="3">
+          <v-sheet color="#0B1D3A" rounded="xl" class="pa-4 hero-point-card d-flex flex-column">
+            <v-icon :color="point.color" class="mb-2" size="26">
+              {{ point.icon }}
+            </v-icon>
+            <div class="text-subtitle-2 font-weight-bold mb-1 hero-point-title">
+              {{ point.title }}
+            </div>
+            <div class="text-caption font-weight-medium mb-1 hero-point-subtitle">
+              {{ point.subtitle }}
+            </div>
+            <div class="text-body-2 hero-point-text">
+              {{ point.text }}
+            </div>
+          </v-sheet>
         </v-col>
       </v-row>
     </v-container>
@@ -120,32 +53,49 @@
         </v-row>
 
         <v-row>
-          <v-col v-for="item in modules" :key="item.title" cols="12" sm="6" lg="3">
-            <v-card rounded="xl" outlined color="#0B1D3A" class="pa-5 fill-height">
-              <v-icon :color="item.color" size="32" class="mb-4">
-                {{ item.icon }}
-              </v-icon>
-              <div class="text-h6 font-weight-bold mb-3">
-                {{ item.title }}
+          <v-col cols="12" md="5" class="mb-6 mb-md-0">
+            <v-sheet rounded="xl" color="#0B1D3A" class="pa-6 platform-intro-panel fill-height">
+              <v-img src="/branding/logo-logistikpro-removebg-preview.png" contain max-height="120" class="mb-4" />
+              <div class="text-subtitle-1 font-weight-medium mb-2">
+                Diseño pensado para presentar el producto
               </div>
-              <div class="text-body-2 mb-4">
-                {{ item.text }}
+              <div class="text-body-2">
+                La home se enfoca en comunicar el valor de la suite sin saturar, con jerarquías limpias y rutas
+                claras hacia cada subdominio.
               </div>
-              <v-list dense color="transparent" class="pa-0">
-                <v-list-item v-for="line in item.lines" :key="line" class="px-0">
-                  <v-list-item-icon class="mr-3">
-                    <v-icon small color="accent">
-                      mdi-minus
-                    </v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-title class="text-body-2">
-                      {{ line }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-card>
+            </v-sheet>
+          </v-col>
+
+          <v-col cols="12" md="7">
+            <v-row>
+              <v-col v-for="item in modules" :key="item.title" cols="12" sm="6">
+                <v-card rounded="xl" outlined color="#0B1D3A" class="pa-5 fill-height module-panel-card">
+                  <v-icon :color="item.color" size="32" class="mb-4">
+                    {{ item.icon }}
+                  </v-icon>
+                  <div class="text-h6 font-weight-bold mb-3">
+                    {{ item.title }}
+                  </div>
+                  <div class="text-body-2 mb-4">
+                    {{ item.text }}
+                  </div>
+                  <v-list dense color="transparent" class="pa-0">
+                    <v-list-item v-for="line in item.lines" :key="line" class="px-0">
+                      <v-list-item-icon class="mr-3">
+                        <v-icon small color="accent">
+                          mdi-minus
+                        </v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title class="text-body-2">
+                          {{ line }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-card>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
       </v-container>
@@ -166,9 +116,9 @@
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row class="plans-row">
         <v-col v-for="plan in plans" :key="plan.title" cols="12" md="4">
-          <v-card rounded="xl" outlined class="pa-6 fill-height" :color="plan.featured ? '#10274D' : '#091A35'">
+          <v-card rounded="xl" outlined class="pa-6 fill-height plan-card" :color="plan.featured ? '#10274D' : '#091A35'">
             <v-chip v-if="plan.badge" color="accent" dark label small class="mb-4">
               {{ plan.badge }}
             </v-chip>
@@ -223,9 +173,9 @@
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="zones-row">
           <v-col v-for="zone in zones" :key="zone.title" cols="12" md="4">
-            <v-card rounded="xl" outlined color="#0B1D3A" class="pa-6 fill-height">
+            <v-card rounded="xl" outlined color="#0B1D3A" class="pa-6 fill-height zone-card">
               <v-icon :color="zone.color" size="32" class="mb-4">
                 {{ zone.icon }}
               </v-icon>
@@ -248,7 +198,7 @@
     </v-sheet>
 
     <v-container id="contacto" class="py-12 py-md-16">
-      <v-card rounded="xl" color="#10274D" outlined class="pa-5 pa-md-10">
+      <v-card rounded="xl" color="#10274D" outlined class="pa-5 pa-md-10 contact-card">
         <v-row align="center" justify="space-between">
           <v-col cols="12" md="8">
             <div class="text-overline accent--text mb-2">
@@ -264,6 +214,7 @@
           </v-col>
 
           <v-col cols="12" md="4" class="text-center text-md-right">
+            <v-img src="/branding/logo-logistikpro-removebg-preview.png" contain max-height="80" class="mb-4" />
             <v-btn color="accent" dark x-large rounded block class="mb-4">
               Agendar demo
             </v-btn>
@@ -418,10 +369,29 @@ export default {
   color: #f4f7fb;
 }
 
+.hero-banner-section {
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.hero-banner-image {
+  border-radius: 26px;
+  overflow: hidden;
+}
+
+.hero-banner-shell {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 24px 46px rgba(2, 8, 20, 0.42);
+}
+
 .landing-title {
   font-size: clamp(2.4rem, 5vw, 4.6rem);
   line-height: 1.02;
   letter-spacing: -0.03em;
+}
+
+.hero-lead-text {
+  max-width: 62ch;
 }
 
 .landing-page .v-sheet,
@@ -447,6 +417,67 @@ export default {
   box-shadow: 0 20px 34px rgba(0, 0, 0, 0.28);
 }
 
+.platform-hero-card {
+  backdrop-filter: blur(1px);
+  border-color: rgba(244, 182, 64, 0.3) !important;
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.38);
+}
+
+.platform-hero-story {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.platform-mini-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.platform-mini-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(244, 182, 64, 0.32);
+}
+
+.hero-strip-container {
+  margin-top: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-strip-row {
+  row-gap: 12px;
+}
+
+.platform-intro-panel {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.module-panel-card {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.module-panel-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(244, 182, 64, 0.35) !important;
+}
+
+.plans-row,
+.zones-row {
+  row-gap: 14px;
+}
+
+.plan-card,
+.zone-card,
+.contact-card {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.plan-card:hover,
+.zone-card:hover,
+.contact-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(244, 182, 64, 0.28) !important;
+}
+
 .hero-point-title,
 .hero-point-subtitle,
 .hero-point-text {
@@ -456,18 +487,25 @@ export default {
 }
 
 .hero-point-title {
+  line-clamp: 1;
   -webkit-line-clamp: 1;
 }
 
 .hero-point-subtitle {
+  line-clamp: 1;
   -webkit-line-clamp: 1;
 }
 
 .hero-point-text {
+  line-clamp: 3;
   -webkit-line-clamp: 3;
 }
 
 @media (max-width: 599px) {
+  .hero-banner-image {
+    border-radius: 18px;
+  }
+
   .hero-point-card {
     min-height: 156px;
   }
