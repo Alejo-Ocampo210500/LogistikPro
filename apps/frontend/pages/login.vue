@@ -1,19 +1,15 @@
 <template>
-    <div>
-        
-    </div>
-</template>
-
-<script>
+  <h1>Login</h1>
+</template><script>
 export default {
-    name: 'LoginPage',
+  name: 'LoginPage',
 
-    layout: 'LoginLayout',
+  layout: 'logistikLayout',
 
-    data() {
-        return {
+  data() {
+    return {
 
-        }
     }
+  }
 }
 </script>
