@@ -13,8 +13,8 @@
                         {{ item.text }}
                     </v-btn>
 
-                    <v-btn color="accent" dark rounded class="ml-4 px-6" href="/login">
-                        Iniciar sesiónsss
+                    <v-btn color="accent" dark rounded class="ml-4 px-6" nuxt to="/login">
+                        Iniciar sesión
                     </v-btn>
                 </div>
 
@@ -50,7 +50,7 @@
             </v-list>
 
             <div class="pa-6">
-                <v-btn block color="accent" dark x-large rounded href="/login">
+                <v-btn block color="accent" dark x-large rounded nuxt to="/login">
                     Iniciar sesión
                 </v-btn>
             </div>
