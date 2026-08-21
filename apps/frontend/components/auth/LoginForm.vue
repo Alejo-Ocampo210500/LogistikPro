@@ -2,14 +2,10 @@
   <v-card light rounded="xl" elevation="12" color="#ffffff" class="pa-6 pa-md-8 login-card">
     <div class="top-accent mb-4"></div>
 
-    <div class="d-flex justify-space-between align-center mb-3">
+    <div class="d-flex align-center mb-3">
       <v-chip small outlined color="#b2c3dd" text-color="#4b5f80" class="font-weight-medium">
         Acceso seguro
       </v-chip>
-
-      <v-avatar size="40" class="isotipo-mini">
-        <v-img src="/branding/isotipo-logistikpro.png" alt="Isotipo LogistikPro" contain />
-      </v-avatar>
     </div>
 
     <div class="text-h5 font-weight-black mb-1 secondary--text text--darken-2">
@@ -140,12 +136,6 @@ export default {
   color: #1a2b4a;
   letter-spacing: 0.08em;
   box-shadow: 0 10px 22px rgba(244, 182, 64, 0.26);
-}
-
-.isotipo-mini {
-  border: 1px solid #d6e1f1;
-  background: #f7faff;
-  box-shadow: 0 6px 14px rgba(26, 43, 74, 0.12);
 }
 
 @media (max-width: 600px) {
