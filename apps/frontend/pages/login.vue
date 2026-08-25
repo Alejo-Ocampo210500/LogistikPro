@@ -12,7 +12,7 @@
                 <v-img :src="logo" alt="Logo LogistikPro" contain class="brand-mark mr-3" />
                 <div>
                   <div class="brand-name">Logistik<span>Pro</span></div>
-                  <div class="brand-code">PLATAFORMA OPERATIVA · LP/01</div>
+                  <div class="brand-code">PLATAFORMA OPERATIVA</div>
                 </div>
               </div>
 
@@ -49,8 +49,8 @@
                   <div class="mobile-caption">Centro de operaciones</div>
                 </div>
               </div>
-              <div class="access-meta d-none d-md-flex align-center justify-space-between mb-6">
-                <span>ACCESO / OPERADORES</span><span class="access-id">ID—LP2026</span>
+              <div class="access-meta d-none d-md-flex align-center mb-6">
+                <span>ACCESO / OPERADORES</span>
               </div>
               <LoginForm @authenticated="forwardSession" @start-action="forwardStartAction" @stop-action="forwardStopAction" />
               <div class="secure-note d-flex align-center justify-center mt-6">
@@ -101,7 +101,7 @@ export default {
 .login-shell, .login-layout { min-height: 100vh; }
 .brand-panel { position: relative; background: radial-gradient(circle at 72% 30%, rgba(20, 59, 122, 0.56), transparent 42%), linear-gradient(145deg, rgba(8, 28, 59, 0.58), rgba(4, 15, 34, 0.16)); border-right: 1px solid rgba(131, 156, 197, 0.15); }
 .brand-content { position: relative; z-index: 1; min-height: 100vh; max-width: 880px; padding: clamp(32px, 5vw, 72px); display: flex; flex-direction: column; }
-.brand-mark { flex: 0 0 auto; width: 62px; height: 62px; mix-blend-mode: screen; filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.24)); }
+.brand-mark { flex: 0 0 auto; width: 84px; height: 84px; mix-blend-mode: screen; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.28)); }
 .brand-name, .mobile-name { font-size: 28px; font-weight: 900; letter-spacing: -0.04em; }
 .brand-name span, .mobile-name span { color: #f4b640; }
 .brand-code, .mobile-caption { color: #8292aa; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; }
@@ -125,9 +125,8 @@ export default {
 .form-panel::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 28%; background: #f4b640; }
 .form-column { width: 100%; max-width: 470px; }
 .access-meta { color: #65758f; font-size: 10px; font-weight: 800; letter-spacing: 0.14em; }
-.access-id { color: #143b7a; }
 .secure-note { color: #8292aa; font-size: 11px; letter-spacing: 0.03em; }
-.mobile-mark { flex: 0 0 auto; width: 92px; height: 92px; mix-blend-mode: screen; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.28)); }
+.mobile-mark { flex: 0 0 auto; width: 128px; height: 128px; mix-blend-mode: screen; filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.3)); }
 .mobile-name, .mobile-caption { display: none; }
 .mobile-brand { justify-content: center; padding: 0; }
 @media (max-width: 959px) {
@@ -145,7 +144,7 @@ export default {
 @media (max-width: 600px) {
   .form-panel { min-height: 100svh; padding: 38px 0 44px; align-items: center !important; }
   .form-column { width: calc(100% - 32px); max-width: 460px; }
-  .mobile-brand { margin-bottom: 24px !important; }
+  .mobile-brand { margin-bottom: 20px !important; }
   .feature-grid { grid-template-columns: 1fr; }
   .brand-footer { gap: 16px; line-height: 1.5; }
 }

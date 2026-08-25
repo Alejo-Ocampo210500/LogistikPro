@@ -1,6 +1,5 @@
 <template>
   <v-card light elevation="0" color="#ffffff" class="pa-6 pa-sm-8 pa-lg-10 login-card">
-    <div class="card-index mb-5">01 / IDENTIFICACIÓN</div>
 
     <div class="text-h4 font-weight-black mb-2 login-title">
       Iniciar sesión
@@ -27,8 +26,8 @@
         :append-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
         @click:append="showPassword = !showPassword" />
 
-      <v-checkbox v-model="rememberSession" label="Mantener sesión iniciada" light :disabled="isSubmitting"
-        color="#143b7a" hide-details class="mt-n1 remember-check" />
+      <!-- <v-checkbox v-model="rememberSession" label="Mantener sesión iniciada" light :disabled="isSubmitting"
+        color="#143b7a" hide-details class="mt-n1 remember-check" /> -->
 
       <v-btn block x-large color="#0b2550" class="mt-7 font-weight-bold login-btn" :loading="isSubmitting"
         :disabled="isSubmitting" type="submit">
@@ -49,7 +48,6 @@ export default {
         email: '',
         password: '',
       },
-      rememberSession: false,
       showPassword: false,
       isSubmitting: false,
       errorMessage: '',
@@ -115,12 +113,11 @@ export default {
 .login-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid #d8e0eb;
+  border: 2px solid rgba(244, 182, 64, 0.92);
   border-radius: 24px !important;
   box-shadow: 0 24px 60px rgba(7, 22, 45, 0.14) !important;
 }
 
-.login-card::before { content: ''; position: absolute; top: 0; left: 0; width: 92px; height: 5px; background: #f4b640; }
 .card-index { color: #8292aa; font-size: 10px; font-weight: 800; letter-spacing: 0.16em; }
 .login-title { color: #07162d; letter-spacing: -0.035em; }
 .login-subtitle { color: #65758f; line-height: 1.6; }
