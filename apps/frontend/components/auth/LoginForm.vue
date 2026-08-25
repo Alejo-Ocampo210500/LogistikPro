@@ -1,18 +1,12 @@
 <template>
-  <v-card light rounded="xl" elevation="12" color="#ffffff" class="pa-6 pa-md-8 login-card">
-    <div class="top-accent mb-4"></div>
+  <v-card light elevation="0" color="#ffffff" class="pa-6 pa-sm-8 pa-lg-10 login-card">
+    <div class="card-index mb-5">01 / IDENTIFICACIÓN</div>
 
-    <div class="d-flex align-center mb-3">
-      <v-chip small outlined color="#b2c3dd" text-color="#4b5f80" class="font-weight-medium">
-        Acceso seguro
-      </v-chip>
-    </div>
-
-    <div class="text-h5 font-weight-black mb-1 secondary--text text--darken-2">
+    <div class="text-h4 font-weight-black mb-2 login-title">
       Iniciar sesión
     </div>
 
-    <div class="body-2 mb-6 blue-grey--text text--darken-1">
+    <div class="body-2 mb-8 login-subtitle">
       Ingresa con tu cuenta para continuar en LogistikPro.
     </div>
 
@@ -21,22 +15,25 @@
     </v-alert>
 
     <v-form ref="form" autocomplete="off" @submit.prevent="handleSubmit">
-      <v-text-field v-model.trim="form.email" name="auth_email" label="Correo electrónico" type="email" light filled
-        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" required color="secondary"
+      <label class="field-label" for="auth-email">Correo electrónico</label>
+      <v-text-field id="auth-email" v-model.trim="form.email" name="auth_email" placeholder="nombre@empresa.com" type="email" light outlined
+        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" required color="#143b7a"
         :disabled="isSubmitting" :rules="emailRules" prepend-inner-icon="mdi-email-outline" class="mb-2 auth-field" />
 
-      <v-text-field v-model="form.password" name="auth_password" :type="showPassword ? 'text' : 'password'"
-        label="Contraseña" light filled autocomplete="new-password" required color="secondary" :disabled="isSubmitting"
+      <label class="field-label" for="auth-password">Contraseña</label>
+      <v-text-field id="auth-password" v-model="form.password" name="auth_password" :type="showPassword ? 'text' : 'password'"
+        placeholder="Ingresa tu contraseña" light outlined autocomplete="new-password" required color="#143b7a" :disabled="isSubmitting"
         :rules="passwordRules" prepend-inner-icon="mdi-lock-outline" class="mb-2 auth-field"
         :append-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
         @click:append="showPassword = !showPassword" />
 
       <v-checkbox v-model="rememberSession" label="Mantener sesión iniciada" light :disabled="isSubmitting"
-        color="secondary" hide-details class="mt-n1" />
+        color="#143b7a" hide-details class="mt-n1 remember-check" />
 
-      <v-btn block large color="#f4b640" class="mt-5 font-weight-bold login-btn" :loading="isSubmitting"
+      <v-btn block x-large color="#0b2550" class="mt-7 font-weight-bold login-btn" :loading="isSubmitting"
         :disabled="isSubmitting" type="submit">
-        Entrar
+        Entrar al sistema
+        <v-icon right size="19">mdi-arrow-right</v-icon>
       </v-btn>
     </v-form>
   </v-card>
@@ -116,40 +113,41 @@ export default {
 
 <style scoped>
 .login-card {
-  border: 1px solid #d7e1f1;
-  box-shadow: 0 18px 40px rgba(21, 53, 102, 0.12) !important;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #d8e0eb;
+  border-radius: 24px !important;
+  box-shadow: 0 24px 60px rgba(7, 22, 45, 0.14) !important;
 }
 
-.top-accent {
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #f4b640 0%, #ffe1a0 46%, #f4b640 100%);
-}
+.login-card::before { content: ''; position: absolute; top: 0; left: 0; width: 92px; height: 5px; background: #f4b640; }
+.card-index { color: #8292aa; font-size: 10px; font-weight: 800; letter-spacing: 0.16em; }
+.login-title { color: #07162d; letter-spacing: -0.035em; }
+.login-subtitle { color: #65758f; line-height: 1.6; }
+.field-label { display: block; margin-bottom: 8px; color: #253957; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 
 .auth-field ::v-deep .v-input__slot {
-  border-radius: 12px !important;
-  border: 1px solid #d5deeb !important;
-  background: #f5f8fd !important;
+  min-height: 58px !important;
+  border-radius: 14px !important;
+  background: #f7f9fc !important;
 }
 
-.login-btn {
-  color: #1a2b4a;
-  letter-spacing: 0.08em;
-  box-shadow: 0 10px 22px rgba(244, 182, 64, 0.26);
-}
+.auth-field ::v-deep fieldset { border-color: #ccd6e4 !important; }
+.auth-field ::v-deep .v-input__slot:hover fieldset { border-color: #8192ab !important; }
+.auth-field ::v-deep .v-input__prepend-inner { margin-right: 8px; }
+.auth-field ::v-deep .v-icon { color: #65758f; }
+.remember-check ::v-deep .v-label { color: #52647d; font-size: 13px; }
+.login-btn { height: 58px !important; border-radius: 14px !important; color: #fff !important; letter-spacing: 0.06em; box-shadow: 0 12px 24px rgba(11, 37, 80, 0.22); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 28px rgba(11, 37, 80, 0.28); }
 
 @media (max-width: 600px) {
   .login-card {
-    border-radius: 18px !important;
-    padding: 20px 16px !important;
+    padding: 32px 24px !important;
+    border-radius: 28px !important;
   }
 
-  .login-btn {
-    letter-spacing: 0.03em;
-  }
-
-  .auth-field {
-    margin-bottom: 4px !important;
-  }
+  .login-title { font-size: 1.8rem !important; }
+  .login-btn { letter-spacing: 0.03em; }
+  .auth-field { margin-bottom: 2px !important; }
 }
 </style>

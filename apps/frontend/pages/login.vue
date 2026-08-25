@@ -1,75 +1,63 @@
 <template>
   <v-app>
     <v-main class="login-surface">
-      <v-container fluid class="fill-height pa-0">
-        <v-row no-gutters class="fill-height">
-          <v-col cols="12" md="6" lg="5" class="brand-panel pa-7 pa-md-8 d-flex flex-column justify-start order-1 order-md-1">
-            <div class="brand-title-wrap d-flex align-center mb-3">
-              <div class="text-h3 text-md-h2 font-weight-black white--text brand-title mb-0">
-                LogistikPro
-              </div>
-
-              <v-avatar tile size="88" class="brand-title-logo ml-3">
-                <v-img :src="logo" alt="Logo LogistikPro" contain />
-              </v-avatar>
-            </div>
-
-            <div class="text-h6 font-weight-regular white--text text--lighten-1 mb-4">
-              Software empresarial para operar, controlar y escalar con precisión.
-            </div>
-
-            <div class="feature-stack mt-2">
-              <v-card v-for="(feature, index) in features" :key="feature.title" rounded="lg" elevation="0"
-                class="pa-4 feature-card mb-2" :style="{ '--feature-delay': `${index * 90}ms` }">
-                <div class="d-flex align-start">
-                  <v-avatar size="38" class="mr-3 feature-icon-wrap">
-                    <v-icon small color="#f4b640">{{ feature.icon }}</v-icon>
-                  </v-avatar>
-
-                  <div>
-                    <div class="subtitle-1 font-weight-bold white--text mb-1">
-                      {{ feature.title }}
-                    </div>
-                    <div class="body-2 white--text text--lighten-2">
-                      {{ feature.description }}
-                    </div>
-                  </div>
-                </div>
-              </v-card>
-            </div>
-
-            <div class="brand-lower-zone mt-4">
-              <div class="ops-ribbon">
-                <div class="d-flex align-center justify-space-between flex-wrap">
-                  <div class="d-flex align-center mr-2 mb-1 mb-sm-0">
-                    <span class="ops-live-dot mr-2"></span>
-                    <span class="caption font-weight-bold text-uppercase ops-kicker">Operación en línea</span>
-                  </div>
-
-                  <span class="caption ops-meta">Monitoreo unificado de ventas, inventario y entregas</span>
+      <div class="industrial-grid"></div>
+      <div class="signal-line signal-line--one"></div>
+      <div class="signal-line signal-line--two"></div>
+      <v-container fluid class="login-shell pa-0">
+        <v-row no-gutters class="login-layout">
+          <v-col cols="12" md="7" class="brand-panel order-2 order-md-1">
+            <div class="brand-content">
+              <div class="brand-header d-flex align-center">
+                <v-img :src="logo" alt="Logo LogistikPro" contain class="brand-mark mr-3" />
+                <div>
+                  <div class="brand-name">Logistik<span>Pro</span></div>
+                  <div class="brand-code">PLATAFORMA OPERATIVA · LP/01</div>
                 </div>
               </div>
-            </div>
 
-            <div class="brand-signature d-flex align-center mt-auto pt-4">
-              <v-icon small color="#f4b640" class="mr-2">mdi-domain</v-icon>
-              <span class="subtitle-2 font-weight-medium white--text text--lighten-2">
-                Desarrollado por SOFTNOVA SOLUTIONS
-              </span>
+              <div class="brand-copy">
+                <div class="eyebrow mb-4"><span class="eyebrow-dot"></span>Operación empresarial conectada</div>
+                <h1>Control total para<br><span>mover tu negocio.</span></h1>
+                <p>Software empresarial para operar, controlar y escalar con precisión.</p>
+              </div>
+
+              <div class="feature-grid">
+                <div v-for="(feature, index) in features" :key="feature.title" class="feature-item">
+                  <div class="feature-number">0{{ index + 1 }}</div>
+                  <v-icon color="#f4b640" size="22">{{ feature.icon }}</v-icon>
+                  <div class="feature-text">
+                    <strong>{{ feature.title }}</strong>
+                    <span>{{ feature.description }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="brand-footer d-flex align-center justify-space-between flex-wrap">
+                <div class="system-status d-flex align-center"><span class="status-pulse"></span>En línea</div>
+                <span>Desarrollado por SOFTNOVA SOLUTIONS</span>
+              </div>
             </div>
           </v-col>
 
-          <v-col cols="12" md="6" lg="7" class="form-panel d-flex align-center justify-center pa-4 pa-sm-6 pa-md-10 order-2 order-md-2">
-            <v-responsive max-width="560" width="100%" class="form-wrap">
-              <div class="form-brand-showcase mb-5">
-                <div class="form-brand-orb">
-                  <v-img :src="logo" alt="Logo LogistikPro" contain class="form-brand-image" />
+          <v-col cols="12" md="5" class="form-panel order-1 order-md-2 d-flex align-center justify-center">
+            <div class="form-column">
+              <div class="mobile-brand d-flex d-md-none align-center mb-8">
+                <v-img :src="logo" alt="Logo LogistikPro" contain class="mobile-mark" />
+                <div>
+                  <div class="mobile-name">Logistik<span>Pro</span></div>
+                  <div class="mobile-caption">Centro de operaciones</div>
                 </div>
               </div>
-
-              <LoginForm @authenticated="forwardSession" @start-action="forwardStartAction"
-                @stop-action="forwardStopAction" />
-            </v-responsive>
+              <div class="access-meta d-none d-md-flex align-center justify-space-between mb-6">
+                <span>ACCESO / OPERADORES</span><span class="access-id">ID—LP2026</span>
+              </div>
+              <LoginForm @authenticated="forwardSession" @start-action="forwardStartAction" @stop-action="forwardStopAction" />
+              <div class="secure-note d-flex align-center justify-center mt-6">
+                <v-icon size="15" color="#8292aa" class="mr-2">mdi-shield-check-outline</v-icon>
+                Conexión cifrada y acceso protegido
+              </div>
+            </div>
           </v-col>
         </v-row>
       </v-container>
@@ -83,416 +71,82 @@ import LoginForm from '@/components/auth/LoginForm.vue';
 export default {
   name: 'LoginView',
   layout: 'LoginLayout',
-
-  components: {
-    LoginForm,
-  },
-
-  props: {
-    session: {
-      type: Object,
-      default: null,
-    },
-  },
-
+  components: { LoginForm },
+  props: { session: { type: Object, default: null } },
   data() {
     return {
       logo: '/branding/logoPrincipal.png',
-
       features: [
-        {
-          icon: 'mdi-cash-register',
-          title: 'Ventas y Facturación',
-          description: 'Registra y controla transacciones con flujo de caja en tiempo real.',
-        },
-        {
-          icon: 'mdi-warehouse',
-          title: 'Inventario Inteligente',
-          description: 'Monitorea existencias, entradas y salidas de productos sin fricción.',
-        },
-        {
-          icon: 'mdi-chart-line',
-          title: 'Reportes Estratégicos',
-          description: 'Analiza indicadores críticos para tomar decisiones de alto impacto.',
-        },
-        {
-          icon: 'mdi-account-group-outline',
-          title: 'Clientes y Equipos',
-          description: 'Centraliza clientes, usuarios y permisos con flujos de trabajo ordenados.',
-        },
-        {
-          icon: 'mdi-truck-delivery-outline',
-          title: 'Operación y Entregas',
-          description: 'Supervisa pedidos y trazabilidad logística desde un mismo entorno.',
-        },
+        { icon: 'mdi-cash-register', title: 'Ventas y Facturación', description: 'Flujo de caja en tiempo real.' },
+        { icon: 'mdi-warehouse', title: 'Inventario Inteligente', description: 'Existencias siempre bajo control.' },
+        { icon: 'mdi-chart-line', title: 'Reportes Estratégicos', description: 'Indicadores para decidir mejor.' },
+        { icon: 'mdi-truck-delivery-outline', title: 'Operación y Entregas', description: 'Trazabilidad de inicio a fin.' },
       ],
-
     };
   },
-
   methods: {
-    forwardSession(payload) {
-      this.$emit('authenticated', payload);
-    },
-
-    forwardStartAction(message) {
-      this.$emit('start-action', message);
-    },
-
-    forwardStopAction() {
-      this.$emit('stop-action');
-    },
+    forwardSession(payload) { this.$emit('authenticated', payload); },
+    forwardStartAction(message) { this.$emit('start-action', message); },
+    forwardStopAction() { this.$emit('stop-action'); },
   },
 };
 </script>
 
 <style scoped>
-.login-surface {
-  background: linear-gradient(105deg, #1a3d73 0%, #214f92 51%, #e7eef9 51%, #edf4ff 100%);
-}
-
-.brand-panel {
-  background: linear-gradient(180deg, #1a3768 0%, #193566 55%, #172f5a 100%);
-}
-
-.form-panel {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.52) 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.form-panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(132deg,
-      rgba(244, 182, 64, 0) 0,
-      rgba(244, 182, 64, 0) 20px,
-      rgba(244, 182, 64, 0.15) 20px,
-      rgba(244, 182, 64, 0.15) 22px);
-  opacity: 0.35;
-  pointer-events: none;
-}
-
-.form-panel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 80% 15%, rgba(244, 182, 64, 0.18) 0%, rgba(244, 182, 64, 0) 44%);
-  pointer-events: none;
-}
-
-.form-wrap {
-  position: relative;
-  z-index: 1;
-}
-
-.feature-stack {
-  width: 86%;
-  max-width: 620px;
-}
-
-.brand-isotipo {
-  box-shadow: 0 10px 26px rgba(7, 20, 45, 0.24);
-}
-
-.brand-title {
-  letter-spacing: 0.01em;
-  text-shadow: 0 8px 20px rgba(3, 10, 28, 0.35);
-}
-
-.brand-title-wrap {
-  flex-wrap: wrap;
-}
-
-.brand-title-logo {
-  box-shadow: 0 10px 26px rgba(7, 20, 45, 0.24);
-}
-
-.form-brand-showcase {
-  display: flex;
-  justify-content: center;
-  position: relative;
-}
-
-.form-brand-showcase::before {
-  content: '';
-  position: absolute;
-  width: 210px;
-  height: 210px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(244, 182, 64, 0.28) 0%, rgba(244, 182, 64, 0.04) 52%, rgba(244, 182, 64, 0) 72%);
-  filter: blur(6px);
-  transform: translateY(-8px);
-  pointer-events: none;
-}
-
-.form-brand-orb {
-  width: 168px;
-  height: 168px;
-  border-radius: 50%;
-  padding: 18px;
-  position: relative;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 68%),
-    linear-gradient(150deg, rgba(34, 67, 119, 0.34) 0%, rgba(26, 58, 112, 0.14) 48%, rgba(244, 182, 64, 0.16) 100%);
-  border: 1px solid rgba(103, 132, 184, 0.34);
-  box-shadow:
-    0 16px 42px rgba(25, 54, 102, 0.28),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.34);
-}
-
-.form-brand-image {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 10px 12px rgba(12, 30, 64, 0.32));
-}
-
-.feature-card {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.13) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(3px);
-  box-shadow: 0 10px 22px rgba(7, 20, 45, 0.16);
-  min-height: 92px;
-  transform: translate3d(0, 0, 0);
-  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.36s ease, border-color 0.36s ease;
-  animation: featureReveal 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--feature-delay, 0ms);
-}
-
-.feature-card::before {
-  content: '';
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  top: 0;
-  height: 2px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(244, 182, 64, 0.4) 0%, rgba(244, 182, 64, 0.9) 48%, rgba(244, 182, 64, 0.35) 100%);
-  opacity: 0.72;
-}
-
-.feature-card::after {
-  content: '';
-  position: absolute;
-  top: -140%;
-  left: -24%;
-  width: 46%;
-  height: 320%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.26) 48%, rgba(255, 255, 255, 0) 100%);
-  transform: rotate(18deg);
-  opacity: 0;
-  transition: left 0.52s ease, opacity 0.32s ease;
-}
-
-.feature-icon-wrap {
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  transition: transform 0.36s ease, box-shadow 0.36s ease, background 0.36s ease;
-}
-
-.brand-lower-zone {
-  padding: 2px 0;
-}
-
-.ops-ribbon {
-  border-radius: 12px;
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.06) 100%);
-}
-
-.ops-live-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #f4b640;
-  box-shadow: 0 0 0 5px rgba(244, 182, 64, 0.16);
-}
-
-.ops-kicker {
-  color: rgba(227, 236, 251, 0.9);
-  letter-spacing: 0.08em;
-}
-
-.ops-meta {
-  color: rgba(216, 229, 248, 0.82);
-}
-
-.feature-card .subtitle-1,
-.feature-card .body-2 {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .feature-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(244, 182, 64, 0.36);
-    box-shadow: 0 16px 30px rgba(7, 20, 45, 0.26);
-  }
-
-  .feature-card:hover::after {
-    left: 108%;
-    opacity: 1;
-  }
-
-  .feature-card:hover .feature-icon-wrap {
-    transform: translateY(-2px) scale(1.06);
-    background: rgba(255, 255, 255, 0.26);
-    box-shadow: 0 7px 16px rgba(4, 17, 40, 0.18);
-  }
-
-  .feature-card:hover .subtitle-1 {
-    transform: translateX(1px);
-  }
-}
-
-@keyframes featureReveal {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.985);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.brand-signature {
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-}
-
+.login-surface { position: relative; min-height: 100vh; overflow: hidden; background: #06142b; color: #fff; }
+.industrial-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(106, 133, 175, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(106, 133, 175, 0.07) 1px, transparent 1px); background-size: 42px 42px; mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.7) 58%, transparent 100%); pointer-events: none; }
+.signal-line { position: absolute; width: 280px; height: 1px; background: linear-gradient(90deg, transparent, rgba(244, 182, 64, 0.58), transparent); transform: rotate(-45deg); pointer-events: none; }
+.signal-line--one { left: -70px; top: 24%; }
+.signal-line--two { left: 47%; bottom: 7%; }
+.login-shell, .login-layout { min-height: 100vh; }
+.brand-panel { position: relative; background: radial-gradient(circle at 72% 30%, rgba(20, 59, 122, 0.56), transparent 42%), linear-gradient(145deg, rgba(8, 28, 59, 0.58), rgba(4, 15, 34, 0.16)); border-right: 1px solid rgba(131, 156, 197, 0.15); }
+.brand-content { position: relative; z-index: 1; min-height: 100vh; max-width: 880px; padding: clamp(32px, 5vw, 72px); display: flex; flex-direction: column; }
+.brand-mark { flex: 0 0 auto; width: 62px; height: 62px; mix-blend-mode: screen; filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.24)); }
+.brand-name, .mobile-name { font-size: 28px; font-weight: 900; letter-spacing: -0.04em; }
+.brand-name span, .mobile-name span { color: #f4b640; }
+.brand-code, .mobile-caption { color: #8292aa; font-size: 10px; font-weight: 700; letter-spacing: 0.16em; }
+.brand-copy { margin: auto 0 40px; }
+.eyebrow { color: #aebbd0; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
+.eyebrow-dot { display: inline-block; width: 8px; height: 8px; margin-right: 10px; background: #f4b640; box-shadow: 0 0 0 5px rgba(244, 182, 64, 0.12); }
+.brand-copy h1 { margin: 0; max-width: 760px; font-size: clamp(44px, 5.4vw, 76px); line-height: 0.98; letter-spacing: -0.055em; font-weight: 900; }
+.brand-copy h1 span { color: #f4b640; }
+.brand-copy p { max-width: 560px; margin: 26px 0 0; color: #aebbd0; font-size: 18px; line-height: 1.65; }
+.feature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.feature-item { position: relative; min-height: 106px; padding: 22px; display: flex; align-items: flex-start; gap: 14px; background: rgba(6, 20, 43, 0.72); border: 1px solid rgba(130, 153, 190, 0.14); border-radius: 18px; transition: background 0.25s ease, transform 0.25s ease; }
+.feature-item:hover { background: rgba(15, 43, 83, 0.9); }
+.feature-number { position: absolute; top: 10px; right: 12px; color: rgba(143, 163, 195, 0.28); font-size: 10px; font-weight: 800; letter-spacing: 0.12em; }
+.feature-text { display: flex; flex-direction: column; }
+.feature-text strong { margin-bottom: 5px; color: #f5f7fb; font-size: 14px; }
+.feature-text span { color: #8292aa; font-size: 12px; line-height: 1.45; }
+.brand-footer { margin-top: 30px; color: #65758f; font-size: 9px; font-weight: 700; letter-spacing: 0.13em; }
+.system-status { color: #a5b2c7; text-transform: uppercase; }
+.status-pulse { width: 7px; height: 7px; margin-right: 9px; border-radius: 50%; background: #49c18f; box-shadow: 0 0 0 4px rgba(73, 193, 143, 0.12); }
+.form-panel { position: relative; z-index: 2; padding: 40px clamp(28px, 5vw, 74px); background: #eef2f7; box-shadow: -30px 0 80px rgba(0, 0, 0, 0.18); }
+.form-panel::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 28%; background: #f4b640; }
+.form-column { width: 100%; max-width: 470px; }
+.access-meta { color: #65758f; font-size: 10px; font-weight: 800; letter-spacing: 0.14em; }
+.access-id { color: #143b7a; }
+.secure-note { color: #8292aa; font-size: 11px; letter-spacing: 0.03em; }
+.mobile-mark { flex: 0 0 auto; width: 92px; height: 92px; mix-blend-mode: screen; filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.28)); }
+.mobile-name, .mobile-caption { display: none; }
+.mobile-brand { justify-content: center; padding: 0; }
 @media (max-width: 959px) {
-  .login-surface {
-    background: linear-gradient(180deg, #1b3d74 0%, #214f93 58%, #eef4ff 58%, #eef4ff 100%);
-  }
-
-  .brand-panel {
-    padding-top: 24px !important;
-    padding-bottom: 26px !important;
-  }
-
-  .form-panel {
-    min-height: 100svh;
-    padding-top: 24px !important;
-    padding-bottom: 18px !important;
-  }
-
-  .form-wrap {
-    max-width: 620px;
-  }
-
-  .brand-isotipo {
-    width: 82px !important;
-    height: 82px !important;
-  }
-
-  .brand-title-logo {
-    width: 68px !important;
-    height: 68px !important;
-    margin-left: 10px !important;
-  }
-
-  .brand-title {
-    font-size: 2rem !important;
-    line-height: 1.1 !important;
-    margin-bottom: 0 !important;
-  }
-
-  .form-brand-showcase::before {
-    width: 184px;
-    height: 184px;
-  }
-
-  .form-brand-orb {
-    width: 146px;
-    height: 146px;
-    padding: 16px;
-  }
-
-  .feature-stack {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .brand-lower-zone {
-    margin-top: 10px !important;
-  }
-
-  .feature-card {
-    min-height: auto;
-    padding: 12px !important;
-    animation-duration: 0.46s;
-  }
-
-  .brand-signature {
-    margin-top: 8px !important;
-    padding-top: 12px !important;
-  }
+  .login-surface { overflow: auto; background: #06142b; }
+  .login-layout { min-height: auto; }
+  .form-panel { min-height: 100svh; padding: 48px 28px; border-radius: 0; background: transparent; box-shadow: none; }
+  .form-panel::before { display: none; }
+  .brand-panel { display: none; }
+  .brand-content { min-height: auto; padding: 52px 24px 36px; }
+  .brand-header { display: none !important; }
+  .brand-copy { margin: 0 0 34px; }
+  .brand-copy h1 { font-size: clamp(38px, 10vw, 58px); }
+  .brand-copy p { font-size: 16px; }
 }
-
 @media (max-width: 600px) {
-  .login-surface {
-    background: linear-gradient(180deg, #1b3d74 0%, #214f93 52%, #eef4ff 52%, #eef4ff 100%);
-  }
-
-  .brand-panel {
-    padding-left: 18px !important;
-    padding-right: 18px !important;
-  }
-
-  .form-panel {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-  }
-
-  .feature-card .subtitle-1 {
-    font-size: 0.95rem !important;
-    line-height: 1.2 !important;
-  }
-
-  .feature-card .body-2 {
-    font-size: 0.8rem !important;
-    line-height: 1.25rem !important;
-  }
-
-  .ops-ribbon {
-    padding: 10px;
-  }
-
-  .ops-meta {
-    width: 100%;
-  }
-
-  .brand-title-wrap {
-    align-items: flex-end !important;
-  }
-
-  .brand-title-logo {
-    width: 56px !important;
-    height: 56px !important;
-    margin-left: 8px !important;
-  }
-
-  .form-brand-showcase {
-    margin-bottom: 14px !important;
-  }
-
-  .form-brand-showcase::before {
-    width: 156px;
-    height: 156px;
-    transform: translateY(-4px);
-  }
-
-  .form-brand-orb {
-    width: 124px;
-    height: 124px;
-    padding: 13px;
-  }
+  .form-panel { min-height: 100svh; padding: 38px 0 44px; align-items: center !important; }
+  .form-column { width: calc(100% - 32px); max-width: 460px; }
+  .mobile-brand { margin-bottom: 24px !important; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .brand-footer { gap: 16px; line-height: 1.5; }
 }
 </style>
