@@ -10,9 +10,7 @@ class AuthService
 {
     public function login(array $data): array
     {
-        $user = User::query()
-            ->where('email', $data['email'])
-            ->first();
+        $user = User::where('email', $data['email'])->first();
 
         if (! $user || ! Hash::check($data['password'], $user->password)) {
             throw new AuthenticationException('Correo o contraseña incorrectos.');

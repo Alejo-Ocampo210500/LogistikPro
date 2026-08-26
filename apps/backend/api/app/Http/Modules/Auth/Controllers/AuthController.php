@@ -20,7 +20,6 @@ class AuthController extends Controller
     {
         try {
             $inicioSesion = $this->authService->login($request->validated());
-
             return response()->json($inicioSesion, 200);
         } catch (AuthenticationException $exception) {
             return response()->json([

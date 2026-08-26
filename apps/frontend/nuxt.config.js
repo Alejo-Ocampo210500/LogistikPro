@@ -1,3 +1,26 @@
+import fs from 'fs'
+import path from 'path'
+
+const centralEnvironmentFile = path.resolve(__dirname, '../../env/frontend.env')
+
+if (fs.existsSync(centralEnvironmentFile)) {
+  fs.readFileSync(centralEnvironmentFile, 'utf8')
+    .split(/\r?\n/)
+    .filter(line => line.trim() && !line.trim().startsWith('#'))
+    .forEach((line) => {
+      const separator = line.indexOf('=')
+
+      if (separator === -1) return
+
+      const key = line.slice(0, separator).trim()
+      const value = line.slice(separator + 1).trim().replace(/^(['"])(.*)\1$/, '$2')
+
+      if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
+        process.env[key] = value
+      }
+    })
+}
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -47,7 +70,7 @@ export default {
 
   axios: {
     baseURL: process.env.API_BASE_URL || process.env.VUE_APP_API_BASE_URL || 'http://127.0.0.1:8000/api',
-    browserBaseURL: process.env.API_BROWSER_BASE_URL || '/api',
+    browserBaseURL: process.env.API_BROWSER_BASE_URL || process.env.VUE_APP_API_BASE_URL || 'http://127.0.0.1:8000/api',
     proxy: true,
     headers: {
       common: {
