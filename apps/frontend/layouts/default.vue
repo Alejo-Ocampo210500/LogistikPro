@@ -31,7 +31,7 @@
   </v-app>
 </template>
 <script>
-import HeaderLayout from './headerLayout.vue'
+import HeaderLayout from './HeaderLayout.vue'
 export default {
   name: 'DefaultLayout',
   components: {

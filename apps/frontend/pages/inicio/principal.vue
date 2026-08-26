@@ -4,6 +4,6 @@
 <script>
 export default {
     name: 'principal',
-    layout: 'LogistikLayout',
+    layout: 'admin',
 }
 </script>

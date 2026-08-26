@@ -33,11 +33,11 @@
 </template>
 
 <script>
-import Footer from '../components/footer.vue'
+import Footer from '../components/Footer.vue'
 import Sidebar from '../components/Sidebar.vue'
 
 export default {
-    name: 'LogistikLayout',
+    name: 'AdminLayout',
 
     components: {
         Sidebar,
