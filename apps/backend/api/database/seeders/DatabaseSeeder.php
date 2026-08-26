@@ -15,17 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            EstadoSeeder::class,
-            InitialUserSeeder::class,
-            RegistroSuscripcion2Seeder::class,
-            MetodosPagoSeeder::class,
-            EstadosPagoSeeder::class,
-            PaisesSeeder::class,
-            DepartamentosSeeder::class,
-            CiudadesSeeder::class,
-            ImpuestosSeeder::class,
-            tipoDocumentoSeeder::class,
-
+            SoftnovaUsersSeeder::class,
         ]);
     }
 }

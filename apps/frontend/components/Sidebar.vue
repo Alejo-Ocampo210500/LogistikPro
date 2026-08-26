@@ -19,6 +19,11 @@
 
         <div class="sidebar-footer">
 
+            <v-btn block text class="logout-button mb-3" :loading="cerrandoSesion" @click="cerrarSesion">
+                <v-icon left size="19">mdi-logout</v-icon>
+                Cerrar sesión
+            </v-btn>
+
             <div class="sidebar-footer-line"></div>
 
             <div class="sidebar-footer-content">
@@ -45,6 +50,7 @@ export default {
     data() {
         return {
             menu,
+            cerrandoSesion: false,
         }
     },
 
@@ -57,6 +63,22 @@ export default {
             // )
 
             return this.menu
+        },
+    },
+
+    methods: {
+        async cerrarSesion() {
+            this.cerrandoSesion = true
+
+            try {
+                await this.$api.post('/auth/logout')
+            } catch (error) {
+                // La sesión local también debe cerrarse si el token ya expiró.
+            } finally {
+                this.$clearApiSession()
+                this.cerrandoSesion = false
+                await this.$router.push('/login')
+            }
         },
     },
 }
@@ -205,6 +227,18 @@ export default {
     margin-top: auto;
 
     padding: 10px 18px 20px;
+}
+
+.logout-button {
+    color: rgba(255, 255, 255, 0.78) !important;
+    border-radius: 10px;
+    letter-spacing: 0.02em;
+    text-transform: none;
+}
+
+.logout-button:hover {
+    color: #F5B63B !important;
+    background: rgba(245, 182, 59, 0.1) !important;
 }
 
 .sidebar-footer-line {

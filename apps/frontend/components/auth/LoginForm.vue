@@ -90,7 +90,7 @@ export default {
 
         const token = data?.access_token || data?.token || data?.data?.access_token || data?.data?.token;
         if (token) {
-          this.$setApiToken(token);
+          this.$setApiSession(token, data?.user || data?.data?.user || {});
         }
 
         this.$emit('authenticated', data);

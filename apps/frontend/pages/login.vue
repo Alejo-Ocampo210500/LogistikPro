@@ -85,7 +85,10 @@ export default {
     };
   },
   methods: {
-    forwardSession(payload) { this.$emit('authenticated', payload); },
+    async forwardSession(payload) {
+      this.$emit('authenticated', payload);
+      await this.$router.push('/inicio/principal');
+    },
     forwardStartAction(message) { this.$emit('start-action', message); },
     forwardStopAction() { this.$emit('stop-action'); },
   },

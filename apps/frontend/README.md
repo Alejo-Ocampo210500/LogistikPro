@@ -32,18 +32,20 @@ Environment variables:
 Use the injected API client in components/pages:
 
 ```js
-const response = await this.$api.$post('/login', {
+const { data } = await this.$api.post('/auth/login', {
 	email: 'user@example.com',
 	password: 'secret',
 })
 
-this.$setApiToken(response.token)
+this.$setApiSession(data.access_token, data.user)
 ```
 
 Notes:
 
-- Token is persisted in `localStorage` under `auth_token`.
+- Token and user are persisted for the current browser tab in `sessionStorage`.
 - Every request includes `Authorization: Bearer <token>` automatically when token exists.
+- Protected pages redirect to `/login` when there is no active session.
+- A `401` response clears the local session and redirects to `/login`.
 
 ## Special Directories
 

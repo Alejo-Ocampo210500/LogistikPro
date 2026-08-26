@@ -39,7 +39,12 @@ class loginRepository
             throw new Exception('Las credenciales son incorrectas.');
         }
 
-        $token = $usuario->createToken('logistikpro')->plainTextToken;
+        $usuario->tokens()->update(['revoked' => true]);
+
+        $tokenResult = $usuario->createToken('logistikpro');
+        $tokenResult->token->expires_at = now()->addDays(30);
+        $tokenResult->token->save();
+        $token = $tokenResult->accessToken;
 
         $usuario->update([
             'ultimo_acceso' => now()
