@@ -76,17 +76,20 @@ body,
 
 .admin-drawer {
     background:
-        radial-gradient(circle at 15% 5%,
-            rgba(245, 182, 59, 0.11) 0%,
-            rgba(245, 182, 59, 0.04) 18%,
-            transparent 30%),
-        radial-gradient(circle at 25% 15%,
-            rgba(22, 65, 124, 0.45) 0%,
-            rgba(11, 33, 66, 0.20) 32%,
+        radial-gradient(circle at 5% 24%,
+            rgba(245, 182, 59, 0.55) 0%,
+            rgba(245, 182, 59, 0.32) 12%,
+            rgba(245, 182, 59, 0.14) 28%,
             transparent 48%),
-        linear-gradient(180deg,
-            #0B2142 0%,
-            #07162D 48%,
+        radial-gradient(circle at 100% 58%,
+            rgba(34, 91, 166, 0.45) 0%,
+            rgba(19, 55, 110, 0.18) 35%,
+            transparent 55%),
+        linear-gradient(155deg,
+            #173B70 0%,
+            #102D58 20%,
+            #0B2142 42%,
+            #07162D 70%,
             #061327 100%) !important;
 
     border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -255,7 +258,13 @@ body,
 ========================================================= */
 
 .admin-drawer .v-navigation-drawer__content {
+    display: flex;
+    flex-direction: column;
+
     background: transparent !important;
+
+    /* Vuetify mantiene auto: el scroll aparece solo si el contenido no cabe. */
+    overflow-y: auto;
 }
 
 .admin-drawer .v-list {

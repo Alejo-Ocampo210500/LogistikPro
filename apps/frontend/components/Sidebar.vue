@@ -89,25 +89,10 @@ export default {
     display: flex;
     flex-direction: column;
 
-    height: 100%;
-    min-height: 100%;
+    /* Ocupa únicamente el espacio restante después del logo. */
+    flex: 1 0 auto;
 
-    background:
-        radial-gradient(circle at 5% 4%,
-            rgba(245, 182, 59, 0.55) 0%,
-            rgba(245, 182, 59, 0.32) 12%,
-            rgba(245, 182, 59, 0.14) 28%,
-            transparent 48%),
-        radial-gradient(circle at 100% 55%,
-            rgba(34, 91, 166, 0.45) 0%,
-            rgba(19, 55, 110, 0.18) 35%,
-            transparent 55%),
-        linear-gradient(155deg,
-            #173B70 0%,
-            #102D58 20%,
-            #0B2142 42%,
-            #07162D 70%,
-            #061327 100%) !important;
+    background: transparent;
 }
 
 .sidebar-menu {
