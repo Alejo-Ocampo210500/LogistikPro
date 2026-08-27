@@ -13,7 +13,7 @@
                         {{ item.text }}
                     </v-btn>
 
-                    <v-btn color="accent" dark rounded class="ml-4 px-6" nuxt to="/login">
+                    <v-btn rounded class="ml-4 px-6 brand-gold-btn" nuxt to="/login">
                         Iniciar sesión
                     </v-btn>
                 </div>
@@ -28,7 +28,7 @@
         <!-- DRAWER MÓVIL -->
         <v-navigation-drawer v-model="drawer" temporary app right color="#07162D" width="300">
             <div class="pa-6">
-                <v-img src="/branding/isotipo-logistikpro.png" contain max-width="92" class="mx-auto" />
+                <v-img src="/branding/isotipo_sin_fondo.png" contain max-width="92" class="mx-auto" />
             </div>
 
             <v-divider dark />
@@ -50,7 +50,7 @@
             </v-list>
 
             <div class="pa-6">
-                <v-btn block color="accent" dark x-large rounded nuxt to="/login">
+                <v-btn block x-large rounded class="brand-gold-btn" nuxt to="/login">
                     Iniciar sesión
                 </v-btn>
             </div>
@@ -101,5 +101,16 @@ export default {
 .v-btn {
     text-transform: none;
     letter-spacing: 0;
+}
+
+.brand-gold-btn {
+    background: linear-gradient(135deg, #f4c96b 0%, #d9a441 100%) !important;
+    color: #13294b !important;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(217, 164, 65, 0.3);
+}
+
+.brand-gold-btn:hover {
+    filter: brightness(1.04);
 }
 </style>
