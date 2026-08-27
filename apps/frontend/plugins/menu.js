@@ -2,8 +2,8 @@ const menu = [
     {
         title: 'Inicio',
         icon: 'mdi-view-dashboard-outline',
-        route: '/modulo-parametrizacion',
-        permiso: 'panel.ver',
+        route: '/inicio/principal',
+        // permiso: 'panel.ver',
     },
     {
         title: 'Productos',
@@ -38,7 +38,7 @@ const menu = [
     {
         title: 'Usuarios',
         icon: 'mdi-account-group-outline',
-        route: '/modulo-parametrizacion/usuarios',
+        route: '/usuarios/gestion-usuarios',
         permiso: 'usuarios.ver',
     },
     {
@@ -46,6 +46,18 @@ const menu = [
         icon: 'mdi-shield-account-outline',
         route: '/modulo-parametrizacion/roles',
         permiso: 'roles.ver',
+    },
+    {
+        title: 'Configuración General',
+        icon: 'mdi-cog',
+        route: '/configuracion/empresa',
+        permiso: 'configuracion.empresa.ver',
+    },
+      {
+        title: 'Admin',
+        icon: 'mdi-cog',
+        route: '/configuracion/empresa',
+        permiso: 'configuracion.empresa.ver',
     },
 ]
 

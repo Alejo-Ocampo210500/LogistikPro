@@ -21,6 +21,39 @@
 
         </v-navigation-drawer>
 
+        <!-- BARRA SUPERIOR -->
+        <v-app-bar app color="white" light elevation="1" height="64" class="admin-topbar">
+            <v-btn fab small depressed color="primary" class="mr-3 d-md-none" aria-label="Abrir menú de parametrización"
+                @click="drawer = true">
+                <v-icon>mdi-menu</v-icon>
+            </v-btn>
+
+            <div class="topbar-title">
+                <span>LogistikPro</span>
+                <small>El mejor sistema de gestión de Negocio | SoftNova Solutions</small>
+            </div>
+
+            <v-spacer />
+
+            <div class="topbar-user d-none d-sm-flex">
+                <v-avatar size="34" color="primary">
+                    <span>{{ inicialUsuario }}</span>
+                </v-avatar>
+
+                <strong>{{ nombreUsuario }}</strong>
+            </div>
+
+            <v-btn rounded outlined color="primary" small to="/" class="ml-2">
+                <v-icon left small>mdi-web</v-icon>
+                <span class="d-none d-sm-inline">Sitio público</span>
+            </v-btn>
+
+            <v-btn rounded color="error" small class="ml-2" aria-label="Cerrar sesión" :loading="cerrandoSesion"
+                @click="cerrarSesion">
+                <v-icon small>mdi-logout</v-icon>
+            </v-btn>
+        </v-app-bar>
+
         <!-- CONTENIDO -->
         <v-main class="admin-main">
             <Nuxt />
@@ -46,9 +79,56 @@ export default {
 
     data() {
         return {
-            drawer: null
+            drawer: null,
+            usuario: null,
+            cerrandoSesion: false,
         }
-    }
+    },
+
+    computed: {
+        nombreUsuario() {
+            if (!this.usuario) return 'Usuario'
+
+            const nombreCompleto = [
+                this.usuario.nombre || this.usuario.name,
+                this.usuario.apellido,
+            ].filter(Boolean).join(' ').trim()
+
+            return nombreCompleto || this.usuario.email || 'Usuario'
+        },
+
+        inicialUsuario() {
+            return this.nombreUsuario.charAt(0).toUpperCase() || 'U'
+        },
+    },
+
+    mounted() {
+        this.usuario = this.$getApiUser()
+    },
+
+    watch: {
+        $route() {
+            if (this.$vuetify.breakpoint.smAndDown) {
+                this.drawer = false
+            }
+        },
+    },
+
+    methods: {
+        async cerrarSesion() {
+            this.cerrandoSesion = true
+
+            try {
+                await this.$api.post('/auth/logout')
+            } catch (error) {
+                // La sesión local también se cierra si el token ya expiró.
+            } finally {
+                this.$clearApiSession()
+                this.cerrandoSesion = false
+                await this.$router.push('/login')
+            }
+        },
+    },
 }
 </script>
 
@@ -175,6 +255,10 @@ body,
 
 .admin-main {
     background: #F4F7FB !important;
+}
+
+.admin-topbar {
+    border-bottom: 1px solid #e7ecf2 !important;
 }
 
 
@@ -311,6 +395,16 @@ body,
     .drawer-brand img {
         width: 155px;
         height: 95px;
+    }
+}
+
+@media (max-width: 600px) {
+    .topbar-title span {
+        font-size: 15px;
+    }
+
+    .topbar-title small {
+        display: none;
     }
 }
 </style>

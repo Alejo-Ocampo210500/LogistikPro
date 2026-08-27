@@ -73,7 +73,7 @@ export default {
             try {
                 await this.$api.post('/auth/logout')
             } catch (error) {
-                // La sesión local también debe cerrarse si el token ya expiró.
+                this.$toast.error('Error al cerrar sesión. Por favor, inténtalo de nuevo.')
             } finally {
                 this.$clearApiSession()
                 this.cerrandoSesion = false
@@ -136,14 +136,14 @@ export default {
 .menu-item.v-list-item--active {
     background:
         linear-gradient(90deg,
-            rgba(245, 182, 59, 0.36) 0%,
-            rgba(245, 182, 59, 0.15) 35%,
-            rgba(15, 45, 83, 0.75) 100%) !important;
+            rgba(245, 182, 59, 0.18) 0%,
+            rgba(245, 182, 59, 0.07) 38%,
+            rgba(15, 45, 83, 0.28) 100%) !important;
 
-    border-left: 3px solid #F5B63B;
+    border-left: 2px solid rgba(245, 182, 59, 0.75);
 
     box-shadow:
-        inset 0 0 18px rgba(245, 182, 59, 0.05);
+        inset 0 0 12px rgba(245, 182, 59, 0.025);
 }
 
 .menu-item .v-list-item__icon {
@@ -185,27 +185,6 @@ export default {
     color: #FFFFFF !important;
 
     font-weight: 600;
-}
-
-.menu-item.v-list-item--active::after {
-    content: '';
-
-    position: absolute;
-
-    right: 8px;
-    top: 50%;
-
-    width: 5px;
-    height: 5px;
-
-    border-radius: 50%;
-
-    background: #F5B63B;
-
-    box-shadow:
-        0 0 8px rgba(245, 182, 59, 0.75);
-
-    transform: translateY(-50%);
 }
 
 .sidebar-footer {
