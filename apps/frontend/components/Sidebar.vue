@@ -2,19 +2,70 @@
     <div class="sidebar-wrapper">
 
         <v-list dense nav class="sidebar-menu">
-            <v-list-item v-for="item in menuFiltrado" :key="item.title" :to="item.route" router exact class="menu-item">
-                <v-list-item-icon>
-                    <v-icon>
-                        {{ item.icon }}
-                    </v-icon>
-                </v-list-item-icon>
+            <template v-for="item in menuFiltrado">
+                <v-list-group
+                    v-if="item.children && item.children.length"
+                    :key="`group-${item.title}`"
+                    class="menu-group"
+                    append-icon="mdi-chevron-down"
+                >
+                    <template #activator>
+                        <v-list-item-icon>
+                            <v-icon>
+                                {{ item.icon }}
+                            </v-icon>
+                        </v-list-item-icon>
 
-                <v-list-item-content>
-                    <v-list-item-title class="menu-title">
-                        {{ item.title }}
-                    </v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="menu-title">
+                                {{ item.title }}
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </template>
+
+                    <v-list-item
+                        v-for="child in item.children"
+                        :key="`child-${item.title}-${child.title}`"
+                        :to="child.route"
+                        router
+                        exact
+                        class="menu-item menu-subitem"
+                    >
+                        <v-list-item-icon>
+                            <v-icon>
+                                {{ child.icon }}
+                            </v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title class="menu-title">
+                                {{ child.title }}
+                            </v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-group>
+
+                <v-list-item
+                    v-else
+                    :key="`item-${item.title}`"
+                    :to="item.route"
+                    router
+                    exact
+                    class="menu-item"
+                >
+                    <v-list-item-icon>
+                        <v-icon>
+                            {{ item.icon }}
+                        </v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title class="menu-title">
+                            {{ item.title }}
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </template>
         </v-list>
 
         <div class="sidebar-footer">
@@ -62,11 +113,42 @@ export default {
             //     item => !item.permiso || this.$can(item.permiso)
             // )
 
-            return this.menu
+            return this.filtrarMenu(this.menu)
         },
     },
 
     methods: {
+        filtrarMenu(items) {
+            return items.reduce((acumulado, item) => {
+                const puedeVerPadre = !item.permiso || !this.$can || this.$can(item.permiso)
+
+                if (item.children && item.children.length) {
+                    if (!puedeVerPadre) {
+                        return acumulado
+                    }
+
+                    const hijos = item.children.filter(
+                        child => !child.permiso || !this.$can || this.$can(child.permiso),
+                    )
+
+                    if (hijos.length) {
+                        acumulado.push({
+                            ...item,
+                            children: hijos,
+                        })
+                    }
+
+                    return acumulado
+                }
+
+                if (puedeVerPadre) {
+                    acumulado.push(item)
+                }
+
+                return acumulado
+            }, [])
+        },
+
         async cerrarSesion() {
             this.cerrandoSesion = true
 
@@ -101,6 +183,90 @@ export default {
     background: transparent !important;
 
     padding: 8px 12px 30px;
+}
+
+.menu-group {
+    margin: 4px 0;
+}
+
+::v-deep .menu-group > .v-list-group__header {
+    position: relative;
+
+    min-height: 46px;
+    border-radius: 8px;
+    padding-left: 12px !important;
+
+    transition: background .2s ease, box-shadow .2s ease;
+}
+
+::v-deep .menu-group > .v-list-group__header:hover {
+    background:
+        linear-gradient(90deg,
+            rgba(245, 182, 59, 0.22) 0%,
+            rgba(245, 182, 59, 0.08) 35%,
+            rgba(11, 33, 66, 0.70) 100%) !important;
+}
+
+::v-deep .menu-group > .v-list-group__header .v-icon {
+    color: rgba(255, 255, 255, 0.72);
+    transition: color .2s ease;
+}
+
+::v-deep .menu-group > .v-list-group__header .menu-title {
+    font-weight: 600;
+}
+
+::v-deep .menu-group > .v-list-group__header:hover .v-icon {
+    color: #F5B63B !important;
+}
+
+::v-deep .menu-group > .v-list-group__header .v-list-group__header__append-icon .v-icon {
+    font-size: 19px;
+    color: rgba(245, 182, 59, 0.8);
+    transition: transform .2s ease, color .2s ease;
+}
+
+::v-deep .menu-group.v-list-group--active > .v-list-group__header {
+    background: rgba(245, 182, 59, 0.08) !important;
+    box-shadow: inset 0 0 0 1px rgba(245, 182, 59, 0.2);
+}
+
+::v-deep .menu-group.v-list-group--active > .v-list-group__header .menu-title {
+    color: #FFFFFF !important;
+}
+
+::v-deep .menu-group.v-list-group--active > .v-list-group__header .v-list-group__header__append-icon .v-icon {
+    color: #F5B63B !important;
+}
+
+::v-deep .menu-group > .v-list-group__items {
+    margin: 4px 0 0 18px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(245, 182, 59, 0.25);
+}
+
+.menu-subitem {
+    min-height: 40px;
+    margin: 2px 0;
+    margin-left: 0;
+    padding-left: 10px !important;
+
+    background: rgba(15, 45, 83, 0.24) !important;
+    border-radius: 7px;
+}
+
+.menu-subitem .v-list-item__icon {
+    margin-right: 14px !important;
+}
+
+.menu-subitem .v-icon {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.menu-subitem .menu-title {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.78) !important;
 }
 
 .menu-item {
