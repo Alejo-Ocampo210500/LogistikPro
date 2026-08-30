@@ -2,12 +2,17 @@
     <div>
 
         <v-app-bar app flat color="#07162D" height="82" class="px-md-8">
-            <v-container class="d-flex align-center py-0">
+            <v-container class="d-flex align-center py-0 header-main-row">
                 <a href="/" class="d-flex align-center">
                     <v-img src="/branding/logoPrincipal.png" contain max-width="65" max-height="65" />
                 </a>
 
+                <div class="d-flex align-center justify-center brand-wordmark" aria-label="LogistikPro">
+                    <span class="wordmark-logistik">Logistik</span><span class="wordmark-pro">Pro</span>
+                </div>
+
                 <v-spacer />
+
                 <div class="d-none d-md-flex align-center">
                     <v-btn v-for="item in navItems" :key="item.text" :href="item.href" text dark class="mx-1">
                         {{ item.text }}
@@ -103,6 +108,10 @@ export default {
     letter-spacing: 0;
 }
 
+.header-main-row {
+    position: relative;
+}
+
 .brand-gold-btn {
     background: linear-gradient(135deg, #f4c96b 0%, #d9a441 100%) !important;
     color: #13294b !important;
@@ -112,5 +121,45 @@ export default {
 
 .brand-gold-btn:hover {
     filter: brightness(1.04);
+}
+
+.brand-wordmark {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+    line-height: 0.98;
+    text-shadow: 0 10px 20px rgba(2, 10, 22, 0.3);
+    pointer-events: none;
+}
+
+.wordmark-logistik {
+    color: #ffffff;
+}
+
+.wordmark-pro {
+    color: #f4b640;
+}
+
+@media (max-width: 1264px) {
+    .brand-wordmark {
+        font-size: 1.7rem;
+    }
+}
+
+@media (max-width: 960px) {
+    .brand-wordmark {
+        font-size: 1.45rem;
+        letter-spacing: -0.03em;
+    }
+}
+
+@media (max-width: 420px) {
+    .brand-wordmark {
+        font-size: 1.3rem;
+    }
 }
 </style>
