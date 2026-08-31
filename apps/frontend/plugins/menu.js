@@ -25,7 +25,7 @@ const menu = [
             {
                 title: 'Marcas',
                 icon: 'mdi-tag-multiple-outline',
-                route: '/modulo-parametrizacion/marcas',
+                route: '/gestionMarcas/marcas',
                 permiso: 'marcas.ver',
             },
             {

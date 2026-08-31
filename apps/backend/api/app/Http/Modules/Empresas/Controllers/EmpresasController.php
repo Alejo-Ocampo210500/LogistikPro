@@ -24,11 +24,12 @@ class EmpresasController extends Controller
     public function listarEmpresasPorId()
     {
         try {
-            $listarEmpresasId = $this->EmpresaRepository->listarEmpresasPorId();
+            $listarEmpresasId = $this->EmpresaRepository->listarEmpresas();
             return response()->json($listarEmpresasId, 200);
         } catch (\Throwable $th) {
             return response()->json([
-                'mensaje' => 'Error al listar las empresas por ID',
+                'mensaje' => 'Error al listar las empresas ',
+                'error' => $th->getMessage(),
             ], 400);
         }
     }
