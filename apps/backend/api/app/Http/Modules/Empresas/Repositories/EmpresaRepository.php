@@ -12,7 +12,7 @@ class EmpresaRepository
      *
      * @author Alejandro Ocampos
      */
-    public function listarEmpresasPorId()
+    public function listarEmpresas()
     {
         return Empresa::where(
             'estado_id', 1)
